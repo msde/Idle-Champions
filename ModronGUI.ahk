@@ -362,6 +362,9 @@ Gui, MyWindow:Font, cDefault w400
 Gui, MyWindow:Font, w700
 Gui, MyWindow:Add, Text, x15 y+10, `Loop: 
 Gui, MyWindow:Add, Text, vgLoopID x+2 w200, Not Started
+Gui, MyWindow:Add, Text, x15 y+10, Error:
+Gui, MyWindow:Add, Text, vgErrorID x+2 w200, None
+Gui, MyWindow:Add, Text, vdtErrorTimeID x+2 w50, % dtErrorTime
 Gui, MyWindow:Font, w400
 
 if (gDoChests)
@@ -640,7 +643,7 @@ CloseIC()
     StartTime := A_TickCount
     ElapsedTime := 0
     GuiControl, MyWindow:, gloopID, Saving and Closing IC
-    While (WinExist("ahk_exe IdleDragons.exe") AND ElapsedTime < 60000) 
+    While (WinExist("ahk_exe IdleDragons.exe") AND ElapsedTime < 30000)
     {
         Sleep 100
         ElapsedTime := UpdateElapsedTime(StartTime)
@@ -651,6 +654,17 @@ CloseIC()
         GuiControl, MyWindow:, gloopID, Forcing IC Close
         PostMessage, 0x112, 0xF060,,, ahk_exe IdleDragons.exe
         sleep 1000
+        if WinExist("ahk_exe IdleDragons.exe")
+        {
+            ; WinKill suggestion from Malevolent
+            ; https://discord.com/channels/357247482247380994/877960846196764712/896344575621349406
+            WinKill
+            GuiControl, MyWindow:, gloopID, WINKILL IC
+            GuiControl, MyWindow:, gerrorID, WINKILL IC
+            dtErrorTime := Round((A_TickCount - gStartTime) / 3600000, 2)
+            GuiControl, MyWindow:, dtErrorTimeID, % dtErrorTime
+            sleep 1000
+        }
         ElapsedTime := UpdateElapsedTime(StartTime)
         UpdateStatTimers()
     }
