@@ -1381,6 +1381,9 @@ EndAdventure()
     {
         WinActivate, ahk_exe IdleDragons.exe
         MouseClick, Left, xClick, yClick, 1
+        ; Welcome back fix from
+        ; https://discord.com/channels/357247482247380994/474639469916454922/885207856289292408
+        ; MouseClick, Left, xClick + 80, yClick, 2
         if (yClick < yClickMax)
         yClick := yClick + 10
         Else
