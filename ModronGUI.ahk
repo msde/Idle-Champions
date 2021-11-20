@@ -765,6 +765,11 @@ SetFormation(gLevel_Number)
     {
         DirectedInput("{e}")
     }
+    else if (gLevel_Number > gAreaLow + 3)
+    {
+        ; Use 'e' formation for the final levels 
+        DirectedInput("{e}")
+    }
     else if (!ReadQuestRemaining(1) AND ReadTransitioning(1) AND gLevel_Number < gAreaLow)
     {
         DirectedInput("{e}")
