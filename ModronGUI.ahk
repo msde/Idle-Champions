@@ -128,6 +128,8 @@ global gSlowRunTime		:=
 global gFastRunTime		:= 100
 global gRunStartTime 	:=
 global gTotal_RunCount	:= 0
+global gTotal_StackRestartCount := 0
+global gTotal_RestartStacks := 0
 global gStartTime 	    := 
 global gPrevLevelTime	:=	
 global gPrevRestart 	:=
@@ -316,6 +318,10 @@ Gui, MyWindow:Add, Text, x15 y+10, Stats updated once per run:
 Gui, MyWindow:Font, w400
 Gui, MyWindow:Add, Text, x15 y+10 %statTabTxtWidth%, Total `Run `Count:
 Gui, MyWindow:Add, Text, vgTotal_RunCountID x+2 w50, % gTotal_RunCount
+Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Total Stack `Restart `Count:
+Gui, MyWindow:Add, Text, vgTotal_StackRestartCountID x+2 w50, % gTotal_StackRestartCount
+Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. Stacks Per Stack `Restart:
+Gui, MyWindow:Add, Text, vgAvgStackRestartStacksID x+2 w50,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Previous `Run `Time:
 Gui, MyWindow:Add, Text, vgPrevRunTimeID x+2 w50, % gPrevRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fastest `Run `Time:
@@ -941,8 +947,10 @@ GetNumStacksFarmed()
 
 StackRestart()
 {
+    ++gTotal_StackRestartCount
     StartTime := A_TickCount
     ElapsedTime := 0
+    StartSBStacks := ReadSBStacks(1)
     GuiControl, MyWindow:, gloopID, Transitioning to Stack Restart
     while (ReadTransitioning(1))
     {
@@ -981,6 +989,8 @@ StackRestart()
     ;Game may save "q" formation before restarting, creating an endless restart loop. LoadinZone() should bring "w" back before triggering a second restart, but monsters could spawn before it does.
     ;this doesn't appear to help the issue above.
     DirectedInput("{w}")
+    EndSBStacks := ReadSBStacks(1)
+    gTotal_RestartStacks := gTotal_RestartStacks + EndSBStacks - StartSBStacks
 }
 
 StackNormal()
@@ -1111,6 +1121,9 @@ UpdateStartLoopStats(gLevel_Number)
         gbossesPhr := Round(TotalBosses / dtTotalTime, 2)
         GuiControl, MyWindow:, gbossesPhrID, % gbossesPhr
         GuiControl, MyWindow:, gTotal_RunCountID, % gTotal_RunCount
+        GuiControl, MyWindow:, gTotal_StackRestartCountID, % gTotal_StackRestartCount
+        AvgRestartStacks := Round(gTotal_RestartStacks / gTotal_StackRestartCount, 1)
+        GuiControl, MyWindow:, gAvgStackRestartStacksID, % AvgRestartStacks
         GemsTotal := (ReadGems(1) - gGemStart) + (ReadGemsSpent(1) - gGemSpentStart)
         GuiControl, MyWindow:, GemsTotalID, % GemsTotal
         GemsPhr := Round(GemsTotal / dtTotalTime, 2)
