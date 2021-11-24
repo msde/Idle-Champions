@@ -141,7 +141,7 @@ Reload_Clicked:
 Run_Clicked:
 {
 	OpenProcess()
-	ModuleBaseAddress()
+	; ModuleBaseAddress()
 	loop
 	{
 		GuiControl, MyWindow:, gloopID, Run_Clicked
@@ -165,7 +165,7 @@ Run_Clicked:
 Azaka_Clicked:
 {
 	OpenProcess()
-	ModuleBaseAddress()
+	; ModuleBaseAddress()
 	AzakaFarm()
 }
 
@@ -188,7 +188,7 @@ Jimothy_Clicked:
 {
     GuiControl, MyWindow:, Jimothy_ClickedID, Yes
 	OpenProcess()
-	ModuleBaseAddress()
+	; ModuleBaseAddress()
 	FindHew()
 	loop
 	{
@@ -245,7 +245,7 @@ SafetyCheck()
 	    Sleep gOpenProcess
 	    OpenProcess()
 	    Sleep gGetAddress
-		ModuleBaseAddress()
+		; ModuleBaseAddress()
 		gPrevRestart := A_TickCount
 		gPrevLevelTime := A_TickCount
 	    ++ResetCount
