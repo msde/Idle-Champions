@@ -14,7 +14,7 @@ global ScriptSpeed := 10	    ;sets the delay after a directedinput, ms
 global gHewSlot := 2			;Hew's formation slot
 global gJimothy := 0			;Jim Chicken toggle
 global gBrivSwap := 0
-global gClickLeveling := 1
+global gClickLeveling := 0
 global gFkeySpam := 0
 global gRight := 1
 global gSpeedTime := 0
@@ -296,11 +296,11 @@ SwapOutBriv()
 	;	Return 1
 	;}
 
-	;for 7/8x skip and no special levels to avoid
-	;if (j = 1 OR j = 2)
+	;for 2/3x or 7/8x skip and no special levels to avoid
+	if (j = 1 OR j = 2)
 
 	;for 2/7 skip and no special levels to avoid
-	if (j = 2)
+	;if (j = 2)
 	; 3/8 skip
 	;if (j = 1)
 	; 1.x skip
@@ -367,7 +367,7 @@ AzakaFarm()
 
 LevelUp()
 {
-	DirectedInput("{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F10}{F11}")
+	DirectedInput("{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F10}{F11}{F12}")
 	;ChampID := ReadChampIDbySlot(1,, slot)
 	;ChampSeat := ReadChampSeatBySlot(1,, slot)
 	;if (ReadChampLvlBySlot(1,, slot) < arrayMaxLvl[ChampID])
