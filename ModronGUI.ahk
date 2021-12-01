@@ -1024,7 +1024,7 @@ StackRestart()
     DirectedInput("{w}")
     EndSBStacks := ReadSBStacks(1)
     gTotal_RestartStacks := gTotal_RestartStacks + EndSBStacks - StartSBStacks
-    gLastRestartStacks.Push(round(EndSBStacks - StartSBStacks, 0))
+    gLastRestartStacks.Push(ReadCurrentZone(1) . ":" . round(EndSBStacks - StartSBStacks, 0))
     if (gLastRestartStacks.MaxIndex() > gLastRestartStackCount)
     {
         gLastRestartStacks.RemoveAt(1)
