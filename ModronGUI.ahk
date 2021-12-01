@@ -139,6 +139,10 @@ global gRunStartTime 	:=
 global gTotal_RunCount	:= 0
 global gTotal_StackRestartCount := 0
 global gTotal_RestartStacks := 0
+
+; track this many stack restarts -- limiting factor is space on stats tab
+global gLastRestartStackCount := 10
+global gLastRestartStacks := Array()
 global gStartTime 	    := 
 global gPrevLevelTime	:=	
 global gPrevRestart 	:=
@@ -331,6 +335,8 @@ Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Total Stack `Restart `Count:
 Gui, MyWindow:Add, Text, vgTotal_StackRestartCountID x+2 w50, % gTotal_StackRestartCount
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. Stacks Per Stack `Restart:
 Gui, MyWindow:Add, Text, vgAvgStackRestartStacksID x+2 w50,
+Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Last %gLastRestartStackCount% Stack `Restart:
+Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Previous `Run `Time:
 Gui, MyWindow:Add, Text, vgPrevRunTimeID x+2 w50, % gPrevRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fastest `Run `Time:
@@ -789,7 +795,7 @@ DirectedInput(s)
     SafetyCheck()
     ControlFocus,, ahk_exe IdleDragons.exe
     ControlSend,, {Blind}%s%, ahk_exe IdleDragons.exe
-    Sleep, %ScriptSpeed%
+    Sleep, %gScriptSpeed%
 }
 
 SetFormation(gLevel_Number)
@@ -798,7 +804,7 @@ SetFormation(gLevel_Number)
     {
         DirectedInput("{e}")
     }
-    else if (gLevel_Number > gAreaLow + 3)
+    else if (gLevel_Number > gAreaLow + 4)
     {
         ; Use 'e' formation for the final levels 
         DirectedInput("{e}")
@@ -1018,6 +1024,11 @@ StackRestart()
     DirectedInput("{w}")
     EndSBStacks := ReadSBStacks(1)
     gTotal_RestartStacks := gTotal_RestartStacks + EndSBStacks - StartSBStacks
+    gLastRestartStacks.Push(round(EndSBStacks - StartSBStacks, 0))
+    if (gLastRestartStacks.MaxIndex() > gLastRestartStackCount)
+    {
+        gLastRestartStacks.RemoveAt(1)
+    }
 }
 
 StackNormal()
@@ -1151,6 +1162,12 @@ UpdateStartLoopStats(gLevel_Number)
         GuiControl, MyWindow:, gTotal_StackRestartCountID, % gTotal_StackRestartCount
         AvgRestartStacks := Round(gTotal_RestartStacks / gTotal_StackRestartCount, 1)
         GuiControl, MyWindow:, gAvgStackRestartStacksID, % AvgRestartStacks
+        LastRestartStacks := ""
+        For k, v In gLastRestartStacks
+        {
+	    LastRestartStacks := LastRestartStacks . v . " "
+        }
+        GuiControl, MyWindow:, gLastRestartStacksID, % LastRestartStacks
         GemsTotal := (ReadGems(1) - gGemStart) + (ReadGemsSpent(1) - gGemSpentStart)
         GuiControl, MyWindow:, GemsTotalID, % GemsTotal
         GemsPhr := Round(GemsTotal / dtTotalTime, 2)
@@ -1429,6 +1446,7 @@ ToggleAutoProgress( toggleOn := 1 )
 {
     if ( ReadAutoProgressToggled( 1 ) != toggleOn )
     {
+        Sleep, %gScriptSpeed%
         DirectedInput( "{g}" )
     }
 }
