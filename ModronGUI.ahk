@@ -981,7 +981,19 @@ GetNumStacksFarmed()
     }
 }
 
+; Restart the game until we have enough stacks.  Don't mess around with other formations until we have them.
+; Increase delay by 1s each failure until it works.
 StackRestart()
+{
+    restartStackTime := gRestartStackTime
+    while (GetNumStacksFarmed() < gSBTargetStacks)
+    {
+        StackRestartOnce(restartStackTime)
+        restartStackTime += 1000
+    }
+}
+
+StackRestartOnce(restartStackTime)
 {
     ; ++gTotal_StackRestartCount
     StartTime := A_TickCount
@@ -1015,7 +1027,7 @@ StackRestart()
         ElapsedTime := UpdateElapsedTime(StartTime)
         GuiControl, MyWindow:, gloopID, Finish Stack `Sleep: %ElapsedTime%
     }
-    while (ElapsedTime < gRestartStackTime)
+    while (ElapsedTime < restartStackTime)
     {
         Sleep 100
         ElapsedTime := UpdateElapsedTime(StartTime)
