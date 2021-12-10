@@ -605,7 +605,7 @@ MyWindowGuiClose()
     return True
 }
 
-$`::
+$SC029::
 Pause
 gPrevLevelTime := A_TickCount
 return
@@ -820,7 +820,7 @@ SetFormation(gLevel_Number)
         GuiControl, MyWindow:, gloopID, ReadTransitioning
         while (ElapsedTime < 5000 AND !ReadQuestRemaining(1))
         {
-            DirectedInput("{e}{Right}")
+            DirectedInput("{e}{Right}{SC029}")
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
@@ -831,7 +831,7 @@ SetFormation(gLevel_Number)
         GuiControl, MyWindow:, gloopID, Still ReadTransitioning
         while (ElapsedTime < swapSleepMod AND ReadTransitioning(1))
         {
-            DirectedInput("{e}{Right}")
+            DirectedInput("{e}{Right}{SC029}")
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
@@ -1094,7 +1094,12 @@ StackFarm()
     GuiControl, MyWindow:, gloopID, Loading Q Formation
     while ( QR == ReadQuestRemaining( 1 ) AND ElapsedTime < 3000 )
     {
-        DirectedInput( "q{Right}" )
+        var := "q{Right}"
+        if (gClickLeveling)
+        {
+            var := var "{SC029}"
+        }
+        DirectedInput(var)
         ElapsedTime := UpdateElapsedTime(StartTime)
         UpdateStatTimers()
     }
