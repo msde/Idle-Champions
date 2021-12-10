@@ -1,7 +1,7 @@
 #SingleInstance force
 ;Modron Automation Gem Farming Script
 ;by mikebaldi1980
-global ScriptDate := "11/13/21"
+global ScriptDate := "2021-12-09 Emmes"
 ;put together with the help from many different people. thanks for all the help.
 SetWorkingDir, %A_ScriptDir%
 CoordMode, Mouse, Client
@@ -141,7 +141,7 @@ global gTotal_StackRestartCount := 0
 global gTotal_RestartStacks := 0
 
 ; track this many stack restarts -- limiting factor is space on stats tab
-global gLastRestartStackCount := 10
+global gLastRestartStackCount := 8
 global gLastRestartStacks := Array()
 global gStartTime 	    := 
 global gPrevLevelTime	:=	
@@ -152,6 +152,7 @@ global dtCurrentLevelTime :=
 ;globals for reset tracking
 global gFailedStacking := 0
 global gFailedStackConv := 0
+global gFailedStackRestart := 0
 ;globals used for stat tracking
 global gGemStart		:=
 global gCoreXPStart		:=
@@ -335,8 +336,8 @@ Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Total Stack `Restart `Count:
 Gui, MyWindow:Add, Text, vgTotal_StackRestartCountID x+2 w50, % gTotal_StackRestartCount
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. Stacks Per Stack `Restart:
 Gui, MyWindow:Add, Text, vgAvgStackRestartStacksID x+2 w50,
-Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Last %gLastRestartStackCount% Stack `Restart:
-Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w300,
+Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Last
+Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w380,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Previous `Run `Time:
 Gui, MyWindow:Add, Text, vgPrevRunTimeID x+2 w50, % gPrevRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fastest `Run `Time:
@@ -347,6 +348,8 @@ Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. `Run `Time:
 Gui, MyWindow:Add, Text, vgAvgRunTimeID x+2 w50, % gAvgRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fail `Run `Time:
 Gui, MyWindow:Add, Text, vgFailRunTimeID x+2 w50, % gFailRunTime	
+Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fail Stack `Restart:
+Gui, MyWindow:Add, Text, vgFailedStackRestartID x+2 w50, % gFailedStackRestart
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fail Stack Conversion:
 Gui, MyWindow:Add, Text, vgFailedStackConvID x+2 w50, % gFailedStackConv
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fail Stacking:
@@ -804,7 +807,7 @@ SetFormation(gLevel_Number)
     {
         DirectedInput("{e}")
     }
-    else if (gLevel_Number > gAreaLow + 4)
+    else if (gLevel_Number > gAreaLow + 10)
     {
         ; Use 'e' formation for the final levels 
         DirectedInput("{e}")
@@ -980,7 +983,7 @@ GetNumStacksFarmed()
 
 StackRestart()
 {
-    ++gTotal_StackRestartCount
+    ; ++gTotal_StackRestartCount
     StartTime := A_TickCount
     ElapsedTime := 0
     StartSBStacks := ReadSBStacks(1)
@@ -1023,11 +1026,20 @@ StackRestart()
     ;this doesn't appear to help the issue above.
     DirectedInput("{w}")
     EndSBStacks := ReadSBStacks(1)
-    gTotal_RestartStacks := gTotal_RestartStacks + EndSBStacks - StartSBStacks
-    gLastRestartStacks.Push(ReadCurrentZone(1) . ":" . round(EndSBStacks - StartSBStacks, 0))
+    RestartStackCount := EndSBStacks - StartSBStacks
+    gLastRestartStacks.Push(ReadCurrentZone(1) . ":" . round(RestartStackCount, 0))
     if (gLastRestartStacks.MaxIndex() > gLastRestartStackCount)
     {
         gLastRestartStacks.RemoveAt(1)
+    }
+    if (RestartStackCount < 100) ; Assume less than 100 stacks is a failed stack restart
+    {
+        ++gFailedStackRestart
+        GuiControl, MyWindow:, gFailedStackRestartID, % gFailedStackRestart
+    } else {
+        ; only count successes in the total/average
+        ++gTotal_StackRestartCount
+        gTotal_RestartStacks := gTotal_RestartStacks + RestartStackCount
     }
 }
 
@@ -1160,9 +1172,10 @@ UpdateStartLoopStats(gLevel_Number)
         GuiControl, MyWindow:, gbossesPhrID, % gbossesPhr
         GuiControl, MyWindow:, gTotal_RunCountID, % gTotal_RunCount
         GuiControl, MyWindow:, gTotal_StackRestartCountID, % gTotal_StackRestartCount
-        AvgRestartStacks := Round(gTotal_RestartStacks / gTotal_StackRestartCount, 1)
+        AvgRestartStacks := Round(gTotal_RestartStacks / gTotal_StackRestartCount, 0)
         GuiControl, MyWindow:, gAvgStackRestartStacksID, % AvgRestartStacks
-        LastRestartStacks := ""
+
+        LastRestartStacks := gLastRestartStacks.MaxIndex() . ": "
         For k, v In gLastRestartStacks
         {
 	    LastRestartStacks := LastRestartStacks . v . " "
