@@ -1,7 +1,7 @@
 #SingleInstance force
 ;Modron Automation Gem Farming Script
 ;by mikebaldi1980
-global ScriptDate := "2021-12-09 Emmes"
+global ScriptDate := "2021-12-12 Emmes"
 ;put together with the help from many different people. thanks for all the help.
 SetWorkingDir, %A_ScriptDir%
 CoordMode, Mouse, Client
@@ -557,22 +557,22 @@ Save_Clicked:
     IniWrite, %gSCMinGemCount%, UserSettings.ini, Section1, SCMinGemCount
     gSCBuySilvers := NewSCBuySilvers
     if (gSCBuySilvers > 100)
-    gSCBuySilvers := 100
+        gSCBuySilvers := 100
     GuiControl, MyWindow:, gSCBuySilversID, % gSCBuySilvers
     IniWrite, %gSCBuySilvers%, UserSettings.ini, Section1, SCBuySilvers
     gSCSilverCount := NewSCSilverCount
     if (gSCSilverCount > 99)
-    gSCSilverCount := 99
+        gSCSilverCount := 99
     GuiControl, MyWindow:, gSCSilverCountID, % gSCSilverCount
     IniWrite, %gSCSilverCount%, UserSettings.ini, Section1, SCSilverCount
     gSCBuyGolds := NewSCBuyGolds
     if (gSCBuyGolds > 100)
-    gSCBuyGolds := 100
+        gSCBuyGolds := 100
     GuiControl, MyWindow:, gSCBuyGoldsID, % gSCBuyGolds
     IniWrite, %gSCBuyGolds%, UserSettings.ini, Section1, SCBuyGolds
     gSCGoldCount := NewSCGoldCount
     if (gSCGoldCount > 99)
-    gSCGoldCount := 99
+        gSCGoldCount := 99
     GuiControl, MyWindow:, gSCGoldCountID, % gSCGoldCount
     IniWrite, %gSCGoldCount%, UserSettings.ini, Section1, SCGoldCount
 
@@ -700,6 +700,7 @@ CheckForFailedConv()
     return
 }
 
+; Function that runs in zone 1 if all setup is complete, and there are quests remaining.
 FinishZone()
 {
     StartTime := A_TickCount
@@ -707,7 +708,7 @@ FinishZone()
     GuiControl, MyWindow:, gloopID, Finishing Zone
     while (ReadQuestRemaining(1) AND ElapsedTime < 15000)
     {
-        StuffToSpam(0, gLevel_Number)
+        StuffToSpam(0, 1)
         ElapsedTime := UpdateElapsedTime(StartTime)
         UpdateStatTimers()
     }
@@ -742,17 +743,17 @@ DoDashWait()
     ToggleAutoProgress( 0 )
     gTime := ReadTimeScaleMultiplier(1)
     if (gTime < 1)
-    gTime := 1
+        gTime := 1
     DashSpeed := gTime * 1.4
     modDashSleep := gDashSleepTime / gTime
     if (modDashSleep < 1)
-    modDashSleep := gDashSleepTime
+        modDashSleep := gDashSleepTime
     GuiControl, MyWindow:, NewDashSleepID, % modDashSleep
     if (gStackFailConvRecovery)
     {
         CheckForFailedConv()
     }
-    GuiControl, MyWindow:, gloopID, Dash Wait 
+    GuiControl, MyWindow:, gloopID, Dash Wait
     While (ReadTimeScaleMultiplier(1) < DashSpeed AND ElapsedTime < modDashSleep AND ReadCurrentZone(1) = 1)
     {
         StuffToSpam(0, 1, 0)
@@ -760,7 +761,7 @@ DoDashWait()
         UpdateStatTimers()
     }
     if (ReadQuestRemaining(1))
-    FinishZone()
+        FinishZone()
     if (gUlts)
     {
         DoUlts()
@@ -815,27 +816,60 @@ SetFormation(gLevel_Number)
     else if (!ReadQuestRemaining(1) AND ReadTransitioning(1) AND gLevel_Number < gAreaLow)
     {
         DirectedInput("{e}")
+        
+        ; spam briv swap, {Right}, and click until transition is over, quests have loaded, or 5s have passed
         StartTime := A_TickCount
         ElapsedTime := 0
         GuiControl, MyWindow:, gloopID, ReadTransitioning
-        while (ElapsedTime < 5000 AND !ReadQuestRemaining(1))
+        while (ElapsedTime < 5000 AND !ReadQuestRemaining(1) AND ReadTransitioning(1))
         {
-            DirectedInput("{e}{Right}{SC029}")
+            DirectedInput("{e}{Right}")
+            if (gClickLeveling)
+            {
+                DirectedInput("{SC029}")
+            }
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
+
+        ; spam briv swap and {Right} and click until transition is over or gSwapSleep
         StartTime := A_TickCount
         ElapsedTime := 0
         gTime := ReadTimeScaleMultiplier(1)
         swapSleepMod := gSwapSleep / gTime
         GuiControl, MyWindow:, gloopID, Still ReadTransitioning
-        while (ElapsedTime < swapSleepMod AND ReadTransitioning(1))
+        while (ElapsedTime < swapSleepMod AND ReadTransitioning(1) AND ReadChampBenchedByID(1,, 58) = 0)
         {
-            DirectedInput("{e}{Right}{SC029}")
+            DirectedInput("{e}{Right}")
+            if (gClickLeveling)
+            {
+                DirectedInput("{SC029}")
+            }
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
+        ; Briv has been swapped out, wait for swapSleep to end without spamming anything
+        GuiControl, MyWindow:, gloopID, Finishing ReadTransitioning
+        while (ElapsedTime < swapSleepMod AND ReadTransitioning(1))
+        {
+            ElapsedTime := UpdateElapsedTime(StartTime)
+            UpdateStatTimers()
+        }
+
         DirectedInput("{q}")
+        ; Make sure Briv is loaded
+        StartTime := A_TickCount
+        ElapsedTime := 0
+        while (ReadChampBenchedByID(1,, 58) != 0 AND ElapsedTime < 250)
+        {
+            DirectedInput("{q}")
+            ElapsedTime := UpdateElapsedTime(StartTime)
+        }
+    }
+    else if (gLevel_Number > gAreaLow AND GetNumStacksFarmed() < gSBTargetStacks)
+    {
+        ; DO NOT PASS GO IF WE DO NOT HAVE STACKS
+        DirectedInput("{w}")
     }
     else
     DirectedInput("{q}")
@@ -988,6 +1022,11 @@ StackRestart()
     restartStackTime := gRestartStackTime
     while (GetNumStacksFarmed() < gSBTargetStacks)
     {
+        ;send input Left while on a boss zone
+        while (!Mod(ReadCurrentZone(1), 5))
+        {
+            DirectedInput("{Left}{w}")
+        }
         StackRestartOnce(restartStackTime)
         restartStackTime += 1000
     }
@@ -1034,9 +1073,8 @@ StackRestartOnce(restartStackTime)
         UpdateStatTimers()
     }
     SafetyCheck()
-    ;Game may save "q" formation before restarting, creating an endless restart loop. LoadinZone() should bring "w" back before triggering a second restart, but monsters could spawn before it does.
-    ;this doesn't appear to help the issue above.
-    DirectedInput("{w}")
+    
+    ; record metrics on attempt
     EndSBStacks := ReadSBStacks(1)
     RestartStackCount := EndSBStacks - StartSBStacks
     gLastRestartStacks.Push(ReadCurrentZone(1) . ":" . round(RestartStackCount, 0))
@@ -1091,7 +1129,7 @@ StackFarm()
     ;DirectedInput("g")
     ToggleAutoProgress( 0 )
     ;send input Left while on a boss zone
-    while (!mod(ReadCurrentZone(1), 5))
+    while (!Mod(ReadCurrentZone(1), 5))
     {
         DirectedInput("{Left}")
     }
@@ -1100,29 +1138,26 @@ StackFarm()
     stacks := GetNumStacksFarmed()
     if (stacks < gSBTargetStacks)
         StackNormal()
-    QR := ReadQuestRemaining( 1 )
     StartTime := A_TickCount
     ElapsedTime := 0
     GuiControl, MyWindow:, gloopID, Loading Q Formation
-    while ( QR == ReadQuestRemaining( 1 ) AND ElapsedTime < 3000 )
+    ; Load shandie
+    while ( ReadChampBenchedByID(1,, 47) !=0 AND ReadQuestRemaining( 1 ) AND ElapsedTime < 3000 )
     {
-        var := "q{Right}"
-        if (gClickLeveling)
-        {
-            var := var "{SC029}"
-        }
+        var := "{q}{Right}"
         DirectedInput(var)
         ElapsedTime := UpdateElapsedTime(StartTime)
         UpdateStatTimers()
     }
-    if ( ElapsedTime > 3000 )
+    ; Go back one zone while trying to load Shandie
+    if ( ReadChampBenchedByID(1,, 47) != 0 AND ElapsedTime > 3000 )
     {
         GuiControl, MyWindow:, gloopID, Falling back to load Q Formation
         StartTime := A_TickCount
         ElapsedTime := 0
         While ( !ReadTransitioning( 1 ) AND ElapsedTime < 3000 )
         {
-            DirectedInput( "q{Left}" )
+            DirectedInput( "{Left}{q}" )
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
@@ -1130,7 +1165,7 @@ StackFarm()
         ElapsedTime := 0
         While ( ReadTransitioning( 1 ) AND ElapsedTime < 3000 )
         {
-            DirectedInput( "q" )
+            DirectedInput( "{q}" )
             ElapsedTime := UpdateElapsedTime(StartTime)
             UpdateStatTimers()
         }
@@ -1423,6 +1458,7 @@ ModronReset()
             LoadAdventure()
         }
     }
+
 }
 
 EndAdventure() 
@@ -1440,7 +1476,7 @@ EndAdventure()
         MouseClick, Left, xClick, yClick, 1
         ; Welcome back fix from
         ; https://discord.com/channels/357247482247380994/474639469916454922/885207856289292408
-        ; MouseClick, Left, xClick + 80, yClick, 2
+        MouseClick, Left, xClick + 80, yClick, 2
         if (yClick < yClickMax)
         yClick := yClick + 10
         Else
