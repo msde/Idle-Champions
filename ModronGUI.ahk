@@ -753,6 +753,7 @@ DoDashWait()
     {
         CheckForFailedConv()
     }
+    WelcomeBackClick()
     GuiControl, MyWindow:, gloopID, Dash Wait
     While (ReadTimeScaleMultiplier(1) < DashSpeed AND ElapsedTime < modDashSleep AND ReadCurrentZone(1) = 1)
     {
@@ -1459,6 +1460,21 @@ ModronReset()
         }
     }
 
+}
+
+; click on welcome back.  May cause unexpected ults!
+WelcomeBackClick()
+{
+    xClick := (ReadScreenWidth(1) / 2)
+    yClickMax := ReadScreenHeight(1) * 0.78
+    yClick := yClickMax / 2
+    WinActivate, ahk_exe IdleDragons.exe
+    while(yClick < yClickMax)
+    {
+        MouseClick, Left, xClick, yClick, 1
+        yClick := yClick + 10
+        Sleep, 25
+    }
 }
 
 EndAdventure() 
