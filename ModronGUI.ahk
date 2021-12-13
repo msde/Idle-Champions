@@ -1511,7 +1511,7 @@ StuffToSpam(SendRight := 1, gLevel_Number := 1, hew := 1, formation := "")
     if (gCtrlClickLeveling)
     var := var "{Ctrl down}``{Ctrl up}"
     else if (gClickLeveling)
-    var := var "``"
+    var := var "{SC029}{SC029}"
     if (gContinuedLeveling > gLevel_Number)
     var := var gFKeys
     if (gHewUlt AND hew)
