@@ -68,6 +68,9 @@ global gContinuedLeveling := ContinuedLeveling
 ;Farm SB stacks after this zone
 IniRead, AreaLow, UserSettings.ini, Section1, AreaLow, 30
 global gAreaLow := AreaLow
+;Stay in 'e' formation after this zone
+IniRead, AreaEFormation, UserSettings.ini, Section1, AreaEFormation, 1999
+global gAreaEFormation := AreaEFormation
 ;Lowest zone SB stacks can be farmed on
 IniRead, MinStackZone, UserSettings.ini, Section1, MinStackZone, 25
 global gMinStackZone := MinStackZone
@@ -225,6 +228,8 @@ Gui, MyWindow:Add, Edit, vNewContinuedLeveling x15 y+10 w50, % gContinuedLevelin
 Gui, MyWindow:Add, Text, x+5, Use Fkey leveling while below this zone
 Gui, MyWindow:Add, Edit, vNewgAreaLow x15 y+10 w50, % gAreaLow
 Gui, MyWindow:Add, Text, x+5, Farm SB stacks AFTER this zone
+Gui, MyWindow:Add, Edit, vNewgAreaEFormation x15 y+10 w50, % gAreaEFormation
+Gui, MyWindow:Add, Text, x+5, Force 'e' formation AFTER this zone
 Gui, MyWindow:Add, Edit, vNewgMinStackZone x15 y+10 w50, % gMinStackZone
 Gui, MyWindow:Add, Text, x+5, Minimum zone Briv can farm SB stacks on
 Gui, MyWindow:Add, Edit, vNewSBTargetStacks x15 y+10 w50, % gSBTargetStacks
@@ -270,6 +275,8 @@ Gui, MyWindow:Add, Text, x15 y+5, Use Fkey leveling while below this zone:
 Gui, MyWindow:Add, Text, vgContinuedLevelingID x+2 w200, % gContinuedLeveling
 Gui, MyWindow:Add, Text, x15 y+5, Farm SB stacks AFTER this zone: 
 Gui, MyWindow:Add, Text, vgAreaLowID x+2 w200, % gAreaLow
+Gui, MyWindow:Add, Text, x15 y+5, Force 'e' Formation AFTER this zone: 
+Gui, MyWindow:Add, Text, vgAreaEFormationID x+2 w200, % gAreaEFormation
 Gui, MyWindow:Add, Text, x15 y+5, Minimum zone Briv can farm SB stacks on: 
 Gui, MyWindow:Add, Text, vgMinStackZoneID x+2 w200, % gMinStackZone 
 Gui, MyWindow:Add, Text, x15 y+5, Target Haste stacks for next run: 
@@ -514,6 +521,9 @@ Save_Clicked:
     gAreaLow := NewgAreaLow
     GuiControl, MyWindow:, gAreaLowID, % gAreaLow
     IniWrite, %gAreaLow%, UserSettings.ini, Section1, AreaLow
+    gAreaEFormation := NewgAreaEFormation
+    GuiControl, MyWindow:, gAreaEFormationID, % gAreaEFormation
+    IniWrite, %gAreaEFormation%, UserSettings.ini, Section1, AreaEFormation
     gMinStackZone := NewgMinStackZone
     GuiControl, MyWindow:, gMinStackZoneID, % gMinStackZone
     IniWrite, %gMinStackZone%, Usersettings.ini, Section1, MinStackZone
@@ -809,7 +819,7 @@ SetFormation(gLevel_Number)
     {
         DirectedInput("{e}")
     }
-    else if (gLevel_Number > gAreaLow + 10)
+    else if (gLevel_Number > gAreaEFormation)
     {
         ; Use 'e' formation for the final levels 
         DirectedInput("{e}")
