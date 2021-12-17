@@ -1472,12 +1472,12 @@ ModronReset()
 
 }
 
-; click on welcome back.  May cause unexpected ults!
+; click on welcome back.  May cause unexpected ults or viewing of Shandie's profile depending on your screen dimensions!
 WelcomeBackClick()
 {
     xClick := (ReadScreenWidth(1) / 2)
-    yClickMax := ReadScreenHeight(1) * 0.78
-    yClick := yClickMax / 2
+    yClickMax := ReadScreenHeight(1) * 0.76
+    yClick := ReadScreenHeight(1) * 0.65
     WinActivate, ahk_exe IdleDragons.exe
     while(yClick < yClickMax)
     {
