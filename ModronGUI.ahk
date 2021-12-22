@@ -1031,7 +1031,8 @@ GetNumStacksFarmed()
 StackRestart()
 {
     restartStackTime := gRestartStackTime
-    while (GetNumStacksFarmed() < gSBTargetStacks)
+    count := 0
+    while (count < 3 AND GetNumStacksFarmed() < gSBTargetStacks)
     {
         ;send input Left while on a boss zone
         while (!Mod(ReadCurrentZone(1), 5))
@@ -1040,6 +1041,7 @@ StackRestart()
         }
         StackRestartOnce(restartStackTime)
         restartStackTime += 1000
+        count += 1
     }
 }
 
