@@ -125,12 +125,12 @@ DoChests()
 		GuiControl, MyWindow:, gloopID, Opening %gSCSilverCount% Silver Chests
 		OpenChests(1, gSCSilverCount)
 	}
-	else if (gSCGoldCount < gGoldsHoarded AND gSCGoldCount)
+	if (gSCGoldCount < gGoldsHoarded AND gSCGoldCount)
 	{
 		GuiControl, MyWindow:, gloopID, Opening %gSCGoldCount% Gold Chests
 		OpenChests(2, gSCGoldCount)
 	}
-	else if (gSCBuySilvers)
+	if (gSCBuySilvers)
 	{
 		i := gSCBuySilvers * 50
 		j := i + gSCMinGemCount
@@ -140,7 +140,7 @@ DoChests()
 			BuyChests(1, gSCBuySilvers)
 		}
 	}
-	else if (gSCBuyGolds)
+	if (gSCBuyGolds)
 	{
 		i := gSCBuyGolds * 500
 		j := i + gSCMinGemCount
