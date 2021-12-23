@@ -247,7 +247,7 @@ Gui, MyWindow:Add, Edit, vNewSwapSleep x15 y+5 w40, % gSwapSleep
 Gui, MyWindow:Add, Text, x+5, Briv swap sleep time (ms)
 Gui, MyWindow:Add, Checkbox, vgAvoidBosses Checked%gAvoidBosses% x15 y+10, Swap to 'e' formation when `on boss zones
 Gui, MyWindow:Add, Checkbox, vgClickLeveling Checked%gClickLeveling% x15 y+5, `Uncheck `if using a familiar `on `click damage
-Gui, MyWindow:Add, Checkbox, vgCtrlClickLeveling Checked%gCtrlClickLeveling% x15 y+5, Enable ctrl (x100) leveling of `click damage
+Gui, MyWindow:Add, Checkbox, vgCtrlClickLeveling Checked%gCtrlClickLeveling% x15 y+5, Enable ctrl (x100) leveling of `click damage on z1
 Gui, MyWindow:Add, Checkbox, vgStackFailRecovery Checked%gStackFailRecovery% x15 y+5, Enable manual resets to recover from failed Briv stacking
 Gui, MyWindow:Add, Checkbox, vgStackFailConvRecovery Checked%gStackFailConvRecovery% x15 y+5, Enable manual resets to recover from failed Briv stack conversion
 Gui, MyWindow:Add, Checkbox, vgDoChests Checked%gDoChests% x15 y+10, Enable server calls to buy and open chests during stack restart
@@ -1520,7 +1520,7 @@ StuffToSpam(SendRight := 1, gLevel_Number := 1, hew := 1, formation := "")
     var :=
     if (SendRight)
     var := "{Right}"
-    if (gCtrlClickLeveling)
+    if (gCtrlClickLeveling AND gLevel_Number == 1)
     var := var "{Ctrl down}``{Ctrl up}"
     else if (gClickLeveling)
     var := var "{SC029}{SC029}"
