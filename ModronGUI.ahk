@@ -168,10 +168,10 @@ global gStackCountSB :=
 ;define a new gui with tabs and buttons
 Gui, MyWindow:New
 Gui, MyWindow:+Resize -MaximizeBox
-Gui, MyWindow:Add, Button, x415 y25 w60 gSave_Clicked, Save
-Gui, MyWindow:Add, Button, x415 y+50 w60 gRun_Clicked, `Run
-Gui, MyWindow:Add, Button, x415 y+100 w60 gReload_Clicked, `Reload
-Gui, MyWindow:Add, Tab3, x5 y5 w400, Read First|Settings|Help|Stats|Debug|
+Gui, MyWindow:Add, Button, x450 y560 w60 gSave_Clicked, Save
+Gui, MyWindow:Add, Button, x450 y+15 w60 gRun_Clicked, `Run
+Gui, MyWindow:Add, Button, x450 y+15 w60 gReload_Clicked, `Reload
+Gui, MyWindow:Add, Tab3, x0 y0 w450, Read First|Settings|Help|Stats|Debug|
 
 Gui, Tab, Read First
 Gui, MyWindow:Font, w700
@@ -344,7 +344,7 @@ Gui, MyWindow:Add, Text, vgTotal_StackRestartCountID x+2 w50, % gTotal_StackRest
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. Stacks Per Stack `Restart:
 Gui, MyWindow:Add, Text, vgAvgStackRestartStacksID x+2 w50,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Last
-Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w390,
+Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w440,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Previous `Run `Time:
 Gui, MyWindow:Add, Text, vgPrevRunTimeID x+2 w50, % gPrevRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fastest `Run `Time:
@@ -466,7 +466,12 @@ Gui, MyWindow:Add, Text, vInstanceIDID x+2 w300, % InstanceID
 Gui, MyWindow:Add, Text, x15 y+5, ActiveInstance:
 Gui, MyWindow:Add, Text, vActiveInstanceID x+2 w300, % ActiveInstance
 
-Gui, MyWindow:Show
+WinGetPos,,,,TrayHeight,ahk_class Shell_TrayWnd,,,
+height := A_ScreenHeight-694-TrayHeight
+
+Gui, Margin, 0, 0
+Gui -Resize
+Gui, MyWindow:Show, x0 y%height%
 
 ;GUI to input a new install path.
 Gui, InstallGUI:New
