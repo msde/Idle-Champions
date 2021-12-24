@@ -801,8 +801,8 @@ DoUlts()
 {
     StartTime := A_TickCount
     ElapsedTime := 0
-    GuiControl, MyWindow:, gloopID, Spamming Ults for 2s
-    while (ElapsedTime < 2000)
+    GuiControl, MyWindow:, gloopID, Spamming Ults for 1s
+    while (ElapsedTime < 1000)
     {
         DirectedInput("23456789")
         ElapsedTime := UpdateElapsedTime(StartTime)
@@ -1526,7 +1526,7 @@ StuffToSpam(SendRight := 1, gLevel_Number := 1, hew := 1, formation := "")
     if (SendRight)
     var := "{Right}"
     if (gCtrlClickLeveling AND gLevel_Number == 1)
-    var := var "{Ctrl down}``{Ctrl up}"
+    var := var "{Ctrl down}{SC029}{SC029}{Ctrl up}"
     else if (gClickLeveling)
     var := var "{SC029}{SC029}"
     if (gContinuedLeveling > gLevel_Number)
