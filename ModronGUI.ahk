@@ -344,7 +344,7 @@ Gui, MyWindow:Add, Text, vgTotal_StackRestartCountID x+2 w50, % gTotal_StackRest
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Avg. Stacks Per Stack `Restart:
 Gui, MyWindow:Add, Text, vgAvgStackRestartStacksID x+2 w50,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Last
-Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w380,
+Gui, MyWindow:Add, Text, vgLastRestartStacksID x+2 w390,
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Previous `Run `Time:
 Gui, MyWindow:Add, Text, vgPrevRunTimeID x+2 w50, % gPrevRunTime
 Gui, MyWindow:Add, Text, x15 y+2 %statTabTxtWidth%, Fastest `Run `Time:
