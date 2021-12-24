@@ -13,9 +13,9 @@ IsGameActive() {
 }
 
 GetGameAhkId() {
-  ; steam := WinExist("ahk_exe C:\Program Files (x86)\Steam\steamapps\common\IdleChampions\IdleDragons.exe")
   egs := WinExist("ahk_exe C:\Program Files\Epic Games\IdleChampions\IdleDragons.exe")
-  return egs
+  steam := WinExist("ahk_exe C:\Program Files (x86)\Steam\steamapps\common\IdleChampions\IdleDragons.exe")
+  return egs OR steam
 }
 
 DirectedInput(key) {
