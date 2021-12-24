@@ -296,8 +296,11 @@ SwapOutBriv()
 	;	Return 1
 	;}
 
+	;for 3x/4x or 8x/9x skip and no special levels to avoid
+	if (j = 1)
+
 	;for 2/3x or 7/8x skip and no special levels to avoid
-	if (j = 1 OR j = 2)
+	;if (j = 1 OR j = 2)
 
 	;for 2/7 skip and no special levels to avoid
 	;if (j = 2)
