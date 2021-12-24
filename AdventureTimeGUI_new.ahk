@@ -104,7 +104,7 @@ Gui, MyWindow:Add, Text, vTigerCountID x+2 w50, % TigerCount
 Gui, MyWindow:Add, Text, x15 y+2, Address CO:
 Gui, MyWindow:Add, Text, vAddressCOID x+2 w100,
 
-Gui, MyWindow:Show
+Gui, MyWindow:Show, x0 y0
 
 Save_Clicked:
 {
