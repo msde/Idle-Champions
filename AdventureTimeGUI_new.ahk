@@ -371,18 +371,6 @@ AzakaFarm()
 LevelUp()
 {
 	DirectedInput("{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F10}{F11}{F12}")
-	;ChampID := ReadChampIDbySlot(1,, slot)
-	;ChampSeat := ReadChampSeatBySlot(1,, slot)
-	;if (ReadChampLvlBySlot(1,, slot) < arrayMaxLvl[ChampID])
-	;{
-	;	DirectedInput("{F" . ChampSeat . "}")
-	;}
-	;specialize Nay rest will be handeled by Modron
-	;if (ReadChampLvlBySlot(1,, 3) = 100)
-	;{
-	;	SpecializeChamp(2, 2)
-	;}
-
 }
 
 SpecializeChamp(Choice, Choices)

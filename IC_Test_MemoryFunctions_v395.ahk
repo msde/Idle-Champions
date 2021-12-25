@@ -51,10 +51,6 @@ Gui, MyWindow:Add, Text, x15 y+5, ReadScreenWidth:
 Gui, MyWindow:Add, Text, vReadScreenWidthID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+5, ReadScreenHeight: 
 Gui, MyWindow:Add, Text, vReadScreenHeightID x+2 w300,
-Gui, MyWindow:Add, Text, x15 y+5, ReadChampLvlBySlot: 
-Gui, MyWindow:Add, Text, vReadChampLvlBySlotID x+2 w300,
-Gui, MyWindow:Add, Text, x15 y+5, ReadChampSeatBySlot: 
-Gui, MyWindow:Add, Text, vReadChampSeatBySlotID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+5, ReadChampIDBySlot: 
 Gui, MyWindow:Add, Text, vReadChampIDBySlotID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+5, ReadChampLvlByID: 
@@ -65,8 +61,6 @@ Gui, MyWindow:Add, Text, x15 y+5, ReadMonstersSpawned:
 Gui, MyWindow:Add, Text, vReadMonstersSpawnedID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+5, ReadCurrentObjID: 
 Gui, MyWindow:Add, Text, vReadCurrentObjIDID x+2 w300,
-Gui, MyWindow:Add, Text, x15 y+5, ReadClickFamiliarBySlot: 
-Gui, MyWindow:Add, Text, vReadClickFamiliarBySlotID x+2 w300,
 Gui, MyWindow:Add, Text, x15 y+5, ReadHeroAliveBySlot: 
 Gui, MyWindow:Add, Text, vReadHeroAliveBySlotID x+2 w300,
 
@@ -113,13 +107,10 @@ CheckReads()
     ReadUserHash(1)
     ReadScreenWidth(1)
     ReadScreenHeight(1)
-    ReadChampLvlBySlot(1,, 3)
-    ReadChampSeatBySlot(1,, 3)
     ReadChampIDBySlot(1,, 3)
     ReadChampLvlByID(1,, 28)
     ReadChampSeatByID(1,, 28)
     ReadMonstersSpawned(1)
     ReadCurrentObjID(1)
-    ReadClickFamiliarBySlot(1,, 0)
     ReadHeroAliveBySlot(1,, 3)
 }
