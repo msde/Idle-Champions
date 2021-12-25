@@ -97,7 +97,6 @@ MyWindowGuiClose()
 CheckReads()
 {
     OpenProcess()
-    ModuleBaseAddress()
     ReadCurrentZone(1)
     ReadGems(1)
     ReadGemsSpent(1)

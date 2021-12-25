@@ -125,7 +125,6 @@ MyWindowGuiClose()
 CheckReads()
 {
     OpenProcess()
-    ModuleBaseAddress()
     ReadCurrentZone(1)
     ReadHighestZone(1)
     ;ReadAreaLevel(1)
