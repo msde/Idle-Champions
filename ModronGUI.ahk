@@ -171,7 +171,7 @@ Gui, MyWindow:+Resize -MaximizeBox
 Gui, MyWindow:Add, Button, x450 y560 w60 gSave_Clicked, Save
 Gui, MyWindow:Add, Button, x450 y+15 w60 gRun_Clicked, `Run
 Gui, MyWindow:Add, Button, x450 y+15 w60 gReload_Clicked, `Reload
-Gui, MyWindow:Add, Tab3, x0 y0 w450, Read First|Settings|Help|Stats|Debug|
+Gui, MyWindow:Add, Tab3, x0 y0 w450, Read First|Settings|Stats|Help|Debug|
 
 Gui, Tab, Read First
 Gui, MyWindow:Font, w700
