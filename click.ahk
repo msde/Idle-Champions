@@ -5,17 +5,29 @@
 #InstallKeybdHook
 global ScriptSpeed := 20
 
+;class and methods for parsing JSON (User details sent back from a server call)
+#include JSON.ahk
+
+;wrapper with memory reading functions sourced from: https://github.com/Kalamity/classMemory
+#include classMemory.ahk
+
+global g_gameManager := new GameManager
+
 Menu, Tray, Icon, click.png
 
 IsGameActive() {
-	WinGetTitle, title, A
-	return title == "Idle Champions"
+        WinGetTitle, title, A
+        return title == "Idle Champions"
 }
 
 GetGameAhkId() {
-  egs := WinExist("ahk_exe C:\Program Files\Epic Games\IdleChampions\IdleDragons.exe")
-  steam := WinExist("ahk_exe C:\Program Files (x86)\Steam\steamapps\common\IdleChampions\IdleDragons.exe")
-  return egs OR steam
+
+  if g_gameManager.is64BBit()
+  {
+    return WinExist("ahk_exe C:\Program Files\Epic Games\IdleChampions\IdleDragons.exe")
+  } else {
+    return WinExist("ahk_exe C:\Program Files (x86)\Steam\steamapps\common\IdleChampions\IdleDragons.exe")
+  }
 }
 
 DirectedInput(key) {
