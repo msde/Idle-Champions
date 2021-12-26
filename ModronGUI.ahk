@@ -1,7 +1,7 @@
 #SingleInstance force
 ;Modron Automation Gem Farming Script
 ;by mikebaldi1980
-global ScriptDate := "2021-12-12 Emmes"
+global ScriptDate := "2021-12-25 Emmes"
 ;put together with the help from many different people. thanks for all the help.
 SetWorkingDir, %A_ScriptDir%
 CoordMode, Mouse, Client
@@ -471,7 +471,7 @@ height := A_ScreenHeight-694-TrayHeight
 
 Gui, Margin, 0, 0
 Gui -Resize
-Gui, MyWindow:Show, x0 y%height%
+Gui, MyWindow:Show, x0 y%height%, ModronGUI %ScriptDate%
 
 ;GUI to input a new install path.
 Gui, InstallGUI:New
