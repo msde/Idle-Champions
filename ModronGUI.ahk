@@ -899,9 +899,15 @@ LoadingZoneREV()
     GuiControl, MyWindow:, gloopID, Loading Zone
     while (ReadChampBenchedByID(1,, 58) != 1 AND ElapsedTime < 60000)
     {
-        DirectedInput("e{F5}e")
+        DirectedInput("{e}{F5}{e}")
         ElapsedTime := UpdateElapsedTime(StartTime)
         UpdateStatTimers()
+        ; Are we stuck in `w` formation?  Start spamming {Left} too.
+        ; This can happen if calculating offline progress gets skipped somehow.
+        if (ElapsedTime > 10000)
+        {
+        DirectedInput("{Left}")
+        }
     }
     ;check if stuck function would fail here on some cases where game gets stuck in offline progress calc, common after invalid instance. memory would read as if progress was still happening.
     if (ElapsedTime > 60000)
