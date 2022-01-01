@@ -1,7 +1,7 @@
 #SingleInstance force
 ;Modron Automation Gem Farming Script
 ;by mikebaldi1980
-global ScriptDate := "2021-12-25 Emmes"
+global ScriptDate := "2021-12-31 Emmes"
 ;put together with the help from many different people. thanks for all the help.
 SetWorkingDir, %A_ScriptDir%
 CoordMode, Mouse, Client
@@ -1115,6 +1115,15 @@ StackRestartOnce(restartStackTime)
         ++gTotal_StackRestartCount
         gTotal_RestartStacks := gTotal_RestartStacks + RestartStackCount
     }
+
+    LastRestartStacks := ""
+    For k, v In gLastRestartStacks
+    {
+        LastRestartStacks := v . " " . LastRestartStacks
+    }
+    LastRestartStacks := gLastRestartStacks.MaxIndex() . ": " . LastRestartStacks
+    GuiControl, MyWindow:, gLastRestartStacksID, % LastRestartStacks
+
 }
 
 StackNormal()
@@ -1251,11 +1260,12 @@ UpdateStartLoopStats(gLevel_Number)
         AvgRestartStacks := Round(gTotal_RestartStacks / gTotal_StackRestartCount, 0)
         GuiControl, MyWindow:, gAvgStackRestartStacksID, % AvgRestartStacks
 
-        LastRestartStacks := gLastRestartStacks.MaxIndex() . ": "
+        LastRestartStacks := ""
         For k, v In gLastRestartStacks
         {
-	    LastRestartStacks := LastRestartStacks . v . " "
+            LastRestartStacks := v . " " . LastRestartStacks
         }
+        LastRestartStacks := gLastRestartStacks.MaxIndex() . ": " . LastRestartStacks
         GuiControl, MyWindow:, gLastRestartStacksID, % LastRestartStacks
         GemsTotal := (ReadGems(1) - gGemStart) + (ReadGemsSpent(1) - gGemSpentStart)
         GuiControl, MyWindow:, GemsTotalID, % GemsTotal
