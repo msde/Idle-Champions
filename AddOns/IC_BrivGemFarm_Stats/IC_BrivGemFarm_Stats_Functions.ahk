@@ -88,11 +88,11 @@ class IC_BrivGemFarm_Stats_Component
         GuiControlGet, pos, ICScriptHub:Pos, Reset_Briv_Farm_Stats_Button
         posY := posY + 25
         Gui, ICScriptHub:Font, w700
-        Gui, ICScriptHub:Add, GroupBox, x%posX% y%posY% w450 h130 vCurrentRunGroupID, Current `Run:
+        Gui, ICScriptHub:Add, GroupBox, x%posX% y%posY% w450 h110 vCurrentRunGroupID, Current `Run:
         Gui, ICScriptHub:Font, w400
 
         Gui, ICScriptHub:Font, w700
-        Gui, ICScriptHub:Add, Text, vLoopAlignID xp+15 yp+25 , `Loop:
+        Gui, ICScriptHub:Add, Text, vLoopAlignID xp+15 yp+15 , `Loop:
         GuiControlGet, pos, ICScriptHub:Pos, LoopAlignID
         g_LeftAlign := posX
         Gui, ICScriptHub:Add, Text, vLoopID x+2 w400, Not Started
@@ -116,9 +116,9 @@ class IC_BrivGemFarm_Stats_Component
         GuiControlGet, pos, ICScriptHub:Pos, CurrentRunGroupID
         g_DownAlign := posY + posH -5
         Gui, ICScriptHub:Font, w700
-        Gui, ICScriptHub:Add, GroupBox, x%posX% y%g_DownAlign% w450 h350 vOnceRunGroupID, Updated Once Per Full Run:
+        Gui, ICScriptHub:Add, GroupBox, x%posX% y%g_DownAlign% w450 h400 vOnceRunGroupID, Updated Once Per Full Run:
         Gui, ICScriptHub:Font, w400
-        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+25, Previous Run Time (min):
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+15, Previous Run Time (min):
         Gui, ICScriptHub:Add, Text, vPrevRunTimeID x+2 w50,
         Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Fastest Run Time (min):
         Gui, ICScriptHub:Add, Text, vFastRunTimeID x+2 w50,
@@ -138,6 +138,17 @@ class IC_BrivGemFarm_Stats_Component
         Gui, ICScriptHub:Add, Text, vTotalFailRunTimeID x+2 w50,
         Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Failed Stacking Tally by Type:
         Gui, ICScriptHub:Add, Text, vFailedStackingID x+2 w120,
+
+        ; Stack Restart Metrics
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Fail Stack Restart:
+        Gui, ICScriptHub:Add, Text, vFailedStackRestartID x+2 w50,
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+10, Total Stack Restart Count:
+        Gui, ICScriptHub:Add, Text, vTotalStackRestartCountID x+2 w50, 0
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Avg. Stacks Per Stack Restart:
+        Gui, ICScriptHub:Add, Text, vAvgStackRestartStacksID x+2 w50, --
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Last
+        Gui, ICScriptHub:Add, Text, vLastRestartStacksID x+2 w440, 0:
+
 
         Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+10, Silvers Gained:
         Gui, ICScriptHub:Add, Text, vSilversPurchasedID x+2 w200, 0
@@ -174,7 +185,7 @@ class IC_BrivGemFarm_Stats_Component
         Gui, ICScriptHub:Font, w700
         Gui, ICScriptHub:Add, GroupBox, x%posX% y%g_DownAlign% w450 h80 vBrivGemFarmStatsID, BrivGemFarm Stats:
         Gui, ICScriptHub:Font, w400
-        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+25, Formation Swaps Made `This `Run:
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+15, Formation Swaps Made `This `Run:
         Gui, ICScriptHub:Add, Text, vSwapsMadeThisRunID x+2 w200, 
         Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Boss Levels Hit `This `Run:
         Gui, ICScriptHub:Add, Text, vBossesHitThisRunID x+2 w200, 
@@ -350,6 +361,11 @@ class IC_BrivGemFarm_Stats_Component
 
             if (IsObject(this.SharedRunData))
             {
+
+
+                this.UpdateStackRestartMetrics(this.SharedRunData)
+
+
                 GuiControl, ICScriptHub:, SilversPurchasedID, % g_SF.Memory.GetChestCountByID(1) - this.SilverChestCountStart + (IsObject(this.SharedRunData) ? this.SharedRunData.PurchasedSilverChests : SilversPurchasedID)
                 GuiControl, ICScriptHub:, GoldsPurchasedID, % g_SF.Memory.GetChestCountByID(2) - this.GoldChestCountStart + (IsObject(this.SharedRunData) ? this.SharedRunData.PurchasedGoldChests : GoldsPurchasedID)
                 GuiControl, ICScriptHub:, SilversOpenedID, % (IsObject(this.SharedRunData) ? this.SharedRunData.OpenedSilverChests : SilversOpenedID)
@@ -521,5 +537,14 @@ class IC_BrivGemFarm_Stats_Component
             SetTimer, %k%, Off
             SetTimer, %k%, Delete
         }
+    }
+
+    UpdateStackRestartMetrics(data)
+    {
+        GuiControl, ICScriptHub:, FailedStackRestartID, % data.FailedStackRestart
+        GuiControl, ICScriptHub:, TotalStackRestartCountID, % data.TotalStackRestartCount
+        AvgRestartStacks := Round(data.TotalRestartStacks / data.TotalStackRestartCount, 0)
+        GuiControl, ICScriptHub:, AvgStackRestartStacksID, % AvgRestartStacks
+        GuiControl, ICScriptHub:, LastRestartStacksID, % data.LastRestartStacksMessage
     }
 }

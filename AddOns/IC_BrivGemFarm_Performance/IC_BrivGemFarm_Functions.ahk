@@ -151,6 +151,8 @@ class IC_BrivGemFarm_Class
             return
         g_PreviousZoneStartTime := A_TickCount
         g_SharedData.StackFail := 0
+
+        this.InitStackRestartMetrics()
         loop
         {
             g_SharedData.LoopString := "Main Loop"
@@ -350,6 +352,7 @@ class IC_BrivGemFarm_Class
         {
             retryAttempt++
             this.StackFarmSetup()
+            startSBStacks := g_SF.Memory.ReadSBStacks()
             g_SF.CloseIC( "StackRestart" )
             g_SharedData.LoopString := "Stack Sleep"
             var := this.DoChests()
@@ -361,7 +364,8 @@ class IC_BrivGemFarm_Class
                 g_SharedData.LoopString := "Stack Sleep: " . g_BrivUserSettings[ "RestartStackTime" ] - ElapsedTime . var
             }
             g_SF.SafetyCheck()
-            stacks := this.GetNumStacksFarmed()
+            stacks := this.GetNumStacksFarmed() ; Update GUI and Globals
+            this.RecordRestartMetrics(startSBStacks)
             ;check if save reverted back to below stacking conditions
             if ( g_SF.Memory.ReadCurrentZone() < g_BrivUserSettings[ "MinStackZone" ] )
             {
@@ -599,6 +603,57 @@ class IC_BrivGemFarm_Class
                 var .= "`n" . var2
             return var
         }
+    }
+
+    InitStackRestartMetrics()
+    {
+        g_SharedData.FailedStackRestart := 0
+        g_SharedData.TotalStackRestartCount := 0
+        g_SharedData.TotalRestartStacks := 0
+        this.LastRestartStackCount := 8  ; track this many stack restarts -- limiting factor is space on stats tab
+        this.LastRestartStacks := Array()
+    }
+
+    UpdateStackRestartMetrics(data)
+    {
+        GuiControl, ICScriptHub:, FailedStackRestartID, % data.FailedStackRestart
+        GuiControl, ICScriptHub:, TotalStackRestartCountID, % data.TotalStackRestartCount
+        AvgRestartStacks := Round(data.TotalRestartStacks / data.TotalStackRestartCount, 0)
+        GuiControl, ICScriptHub:, AvgStackRestartStacksID, % AvgRestartStacks
+        GuiControl, ICScriptHub:, LastRestartStacksID, % data.LastRestartStacksMessage
+    }
+
+    /*  RecordRestartMetrics - Record some metrics regarding offline stacking
+
+        Parameters:
+        startSBStacks - number of steelbones stacks when offline stacking started
+
+        Returns:
+    */
+    RecordRestartMetrics(startSBStacks)
+    {
+        EndSBStacks := g_SF.Memory.ReadSBStacks()
+        RestartStackCount := EndSBStacks - startSBStacks
+        this.LastRestartStacks.Push(g_SF.Memory.ReadCurrentZone() . ":" . round(RestartStackCount, 0))
+        if (this.LastRestartStacks.MaxIndex() > this.LastRestartStackCount)
+        {
+            this.LastRestartStacks.RemoveAt(1)
+        }
+        if (RestartStackCount < 100) ; Assume less than 100 stacks is a failed stack restart
+        {
+            ++g_SharedData.FailedStackRestart
+        } else {
+            ; only count successes in the total/average
+            ++g_SharedData.TotalStackRestartCount
+            g_SharedData.TotalRestartStacks += RestartStackCount
+        }
+        ; registered objects don't play nicely with Array, so we can't just store LastRestartStacks in g_SharedData
+        g_SharedData.LastRestartStacksMessage := ""
+        For k, v In this.LastRestartStacks
+        {
+            g_SharedData.LastRestartStacksMessage := v . " " . g_SharedData.LastRestartStacksMessage
+        }
+        g_SharedData.LastRestartStacksMessage := this.LastRestartStacks.MaxIndex() . ": " . g_SharedData.LastRestartStacksMessage
     }
 }
 
