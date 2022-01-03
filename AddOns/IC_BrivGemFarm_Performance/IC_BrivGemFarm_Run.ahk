@@ -50,10 +50,9 @@ global isAdvancedBrivSettings := false
 if(A_OSVersion >= "10." && A_OSVersion < "W")
     Menu Tray, Icon, shell32.dll, -51380
 ;Gui, BrivPerformanceGemFarm:New, -LabelMain +hWndhMainWnd -Resize
-Gui, BrivPerformanceGemFarm:New, -Resize
-Gui, BrivPerformanceGemFarm:+Resize -MaximizeBox
+Gui, BrivPerformanceGemFarm:New, -Resize -MaximizeBox
 Gui BrivPerformanceGemFarm:Add, GroupBox, w400 h315, BrivFarm Settings: 
-Gui BrivPerformanceGemFarm:Add, ListView, xp+15 yp+25 w375 h270 vBrivFarmSettingsID -HDR, Setting|Value
+Gui BrivPerformanceGemFarm:Add, ListView, xp yp+25 w375 h270 vBrivFarmSettingsID -HDR, Setting|Value
 Gui, BrivPerformanceGemFarm:Add, Checkbox, vAdvancedBrivSettingsCheck Checked%isAdvancedBrivSettings% gReloadSettingsView_Click x55 y+5, See Advanced (All) Settings.
 ReloadBrivGemFarmSettingsDisplay() ; load settings file.
 if ( !g_BrivUserSettings[ "HiddenFarmWindow" ])
