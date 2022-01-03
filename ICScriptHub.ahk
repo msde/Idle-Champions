@@ -83,7 +83,7 @@ if(g_UserSettings[ "WriteSettings" ] := true)
 
 ;define a new gui with tabs and buttons
 Gui, ICScriptHub:New
-Gui, ICScriptHub:+Resize -MaximizeBox
+Gui, ICScriptHub:-Resize -MaximizeBox
 ;Gui, ICScriptHub:Add, Button, x4 y5 w50 gReload_Clicked, `Reload
 ;Gui, ICScriptHub:Add, Button, x+20 gLaunch_Clicked, Launch IC
 global g_MenuBarXPos:=4
