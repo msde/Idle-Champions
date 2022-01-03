@@ -32,6 +32,13 @@ class IC_SharedData_Class
     ShinyCount := 0
     TriggerStart := false
 
+    ; Stack Restart metrics
+    FailedStackRestart := 0
+    TotalStackRestartCount := 0
+    TotalRestartStacks := 0
+    LastRestartStackCount := 8  ; track this many stack restarts -- limiting factor is space on stats tab
+    LastRestartStackMessage := ""
+
     Close()
     {
         ExitApp
