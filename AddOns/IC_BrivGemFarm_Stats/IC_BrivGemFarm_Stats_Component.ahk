@@ -53,6 +53,16 @@ Gui, ICScriptHub:Add, Text, vTotalFailRunTimeID x+2 w50,
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Failed Stacking Tally by Type:
 Gui, ICScriptHub:Add, Text, vFailedStackingID x+2 w120,
 
+; Stack Restart Metrics
+Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Fail Stack Restart:
+Gui, ICScriptHub:Add, Text, vFailedStackRestartID x+2 w50, % gFailedStackRestart
+Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+10, Total Stack Restart Count:
+Gui, ICScriptHub:Add, Text, vTotalStackRestartCountID x+2 w50, 0
+Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Avg. Stacks Per Stack Restart:
+Gui, ICScriptHub:Add, Text, vAvgStackRestartStacksID x+2 w50, --
+Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Last
+Gui, ICScriptHub:Add, Text, vLastRestartStacksID x+2 w440, 0:
+
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+10, Silvers Gained:
 Gui, ICScriptHub:Add, Text, vSilversPurchasedID x+2 w200, 0
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Silvers Opened:

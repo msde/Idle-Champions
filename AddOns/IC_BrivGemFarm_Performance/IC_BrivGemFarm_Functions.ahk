@@ -156,9 +156,13 @@ class IC_BrivGemFarm_Class
             return
         g_PreviousZoneStartTime := A_TickCount
         g_SharedData.StackFail := 0
+
+	this.InitStackRestartMetrics()
         loop
         {
             g_SharedData.LoopString := "Main Loop"
+            Critical, Off ; make sure this isn't stuck from something else
+            Sleep, 10
             CurrentZone := g_SF.Memory.ReadCurrentZone()
             if(CurrentZone == "" AND !g_SF.SafetyCheck()) ; Check for game closed
                 g_SF.ToggleAutoProgress( 1, false, true ) ; Turn on autoprogress after a restart
@@ -280,7 +284,7 @@ class IC_BrivGemFarm_Class
         static LastTriggerStart := false
 
         TriggerStart := IsObject(this.SharedRunData) ? this.SharedRunData.TriggerStart : LastTriggerStart
-        Critical, On
+        ; Critical, On
         currentZone := g_SF.Memory.ReadCurrentZone()
         if ( g_SF.Memory.ReadResetsCount() > lastResetCount OR (g_SF.Memory.ReadResetsCount() == 0 AND g_SF.Memory.ReadAreaActive() AND lastResetCount != 0 ) OR (TriggerStart AND LastTriggerStart != TriggerStart)) ; Modron or Manual reset happend
         {
@@ -331,7 +335,9 @@ class IC_BrivGemFarm_Class
 
         dtCurrentLevelTime := Round( ( A_TickCount - previousZoneStartTime ) / 1000, 2 )
         GuiControl, ICScriptHub:, dtCurrentLevelTimeID, % dtCurrentLevelTime
-        Critical, Off
+        if (IsObject(SharedRunData))
+            LastTriggerStart := SharedRunData.TriggerStart
+        ; Critical, Off
     }
 
     ;Updates the stats tab's once per run stats
@@ -358,7 +364,7 @@ class IC_BrivGemFarm_Class
         static FailRunTime := 0
         static TotalRunCountRetry := 0
 
-        Critical, On
+        ; Critical, On
         if !isStarted
         {
             LastResetCount := g_SF.Memory.ReadResetsCount()
@@ -372,9 +378,9 @@ class IC_BrivGemFarm_Class
         {
             while(!g_SF.Memory.ReadOfflineDone() AND IsObject(this.SharedRunData) AND this.SharedRunData.TriggerStart)
             {
-                Critical, Off
+                ; Critical, Off
                 Sleep, 50
-                Critical, On
+                ; Critical, On
             }
             ; CoreXP starting on FRESH run.
             if(!TotalRunCount OR (TotalRunCount AND TotalRunCountRetry < 2 AND (!CoreXPStart OR !GemStart)))
@@ -438,6 +444,7 @@ class IC_BrivGemFarm_Class
 
             if (IsObject(this.SharedRunData))
             {
+                this.UpdateStackRestartMetrics(this.SharedRunData)
                 GuiControl, ICScriptHub:, SilversPurchasedID, % g_SF.Memory.GetChestCountByID(1) - SilverChestCountStart + (IsObject(this.SharedRunData) ? this.SharedRunData.PurchasedSilverChests : SilversPurchasedID)
                 GuiControl, ICScriptHub:, GoldsPurchasedID, % g_SF.Memory.GetChestCountByID(2) - GoldChestCountStart + (IsObject(this.SharedRunData) ? this.SharedRunData.PurchasedGoldChests : GoldsPurchasedID)
                 GuiControl, ICScriptHub:, SilversOpenedID, % (IsObject(this.SharedRunData) ? this.SharedRunData.OpenedSilverChests : SilversOpenedID)
@@ -452,7 +459,7 @@ class IC_BrivGemFarm_Class
         }
         if (IsObject(this.SharedRunData))
             LastTriggerStart := this.SharedRunData.TriggerStart
-        Critical, Off
+        ; Critical, Off
     }
 
     UpdateGUIFromCom()
@@ -609,6 +616,7 @@ class IC_BrivGemFarm_Class
             ++i
             this.StackFarmSetup()
             formationArray := g_SF.Memory.GetCurrentFormation()
+            startSBStacks := g_SF.Memory.ReadSBStacks()
             g_SF.CloseIC( "StackRestart" )
             StartTime := A_TickCount
             ElapsedTime := 0
@@ -638,6 +646,7 @@ class IC_BrivGemFarm_Class
             }
             g_SF.SafetyCheck()
             stacks := this.GetNumStacksFarmed() ; Update GUI and Globals
+            this.RecordRestartMetrics(startSBStacks)
             ;check if save reverted back to below stacking conditions
             if ( g_SF.Memory.ReadCurrentZone() < g_BrivUserSettings[ "MinStackZone" ] )
             {
@@ -857,6 +866,57 @@ class IC_BrivGemFarm_Class
             yClick := yClick + 10
             Sleep, 25
         }
+    }
+
+    InitStackRestartMetrics()
+    {
+        g_SharedData.FailedStackRestart := 0
+        g_SharedData.TotalStackRestartCount := 0
+        g_SharedData.TotalRestartStacks := 0
+        this.LastRestartStackCount := 8  ; track this many stack restarts -- limiting factor is space on stats tab
+        this.LastRestartStacks := Array()
+    }
+
+    UpdateStackRestartMetrics(data)
+    {
+        GuiControl, ICScriptHub:, FailedStackRestartID, % data.FailedStackRestart
+        GuiControl, ICScriptHub:, TotalStackRestartCountID, % data.TotalStackRestartCount
+        AvgRestartStacks := Round(data.TotalRestartStacks / data.TotalStackRestartCount, 0)
+        GuiControl, ICScriptHub:, AvgStackRestartStacksID, % AvgRestartStacks
+        GuiControl, ICScriptHub:, LastRestartStacksID, % data.LastRestartStacksMessage
+    }
+
+    /*  RecordRestartMetrics - Record some metrics regarding offline stacking
+
+        Parameters:
+        startSBStacks - number of steelbones stacks when offline stacking started
+
+        Returns:
+    */
+    RecordRestartMetrics(startSBStacks)
+    {
+        EndSBStacks := g_SF.Memory.ReadSBStacks()
+        RestartStackCount := EndSBStacks - startSBStacks
+        this.LastRestartStacks.Push(g_SF.Memory.ReadCurrentZone() . ":" . round(RestartStackCount, 0))
+        if (this.LastRestartStacks.MaxIndex() > this.LastRestartStackCount)
+        {
+            this.LastRestartStacks.RemoveAt(1)
+        }
+        if (RestartStackCount < 100) ; Assume less than 100 stacks is a failed stack restart
+        {
+            ++g_SharedData.FailedStackRestart
+        } else {
+            ; only count successes in the total/average
+            ++g_SharedData.TotalStackRestartCount
+            g_SharedData.TotalRestartStacks += RestartStackCount
+        }
+        ; registered objects don't play nicely with Array, so we can't just store LastRestartStacks in g_SharedData
+        g_SharedData.LastRestartStacksMessage := ""
+        For k, v In this.LastRestartStacks
+        {
+            g_SharedData.LastRestartStacksMessage := v . " " . g_SharedData.LastRestartStacksMessage
+        }
+        g_SharedData.LastRestartStacksMessage := this.LastRestartStacks.MaxIndex() . ": " . g_SharedData.LastRestartStacksMessage
     }
 }
 
