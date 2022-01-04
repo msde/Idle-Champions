@@ -181,6 +181,9 @@ class IC_BrivGemFarm_Class
                     g_SharedData.StackFail := this.CheckForFailedConv()
                 g_SharedData.SwapsMadeThisRun := 0
                 PreviousZone := 1
+
+                this.WelcomeBackClick()
+
                 g_SharedData.TriggerStart := false
                 g_SharedData.LoopString := "Main Loop"
             }
@@ -836,6 +839,23 @@ class IC_BrivGemFarm_Class
             if ( var2 != "" )
                 var .= "`n" . var2
             return var
+        }
+    }
+
+    ; click on welcome back.  May cause unexpected ults or viewing of Shandie's profile depending on your screen dimensions!
+    WelcomeBackClick()
+    {
+        w := g_SF.Memory.ReadScreenWidth(1)
+        h := g_SF.Memory.ReadScreenHeight(1)
+        xClick := w / 2
+        yClickMax := h * 0.76
+        yClick := h * 0.65
+        WinActivate, ahk_exe IdleDragons.exe
+        while(yClick < yClickMax)
+        {
+            MouseClick, Left, xClick, yClick, 1
+            yClick := yClick + 10
+            Sleep, 25
         }
     }
 }
