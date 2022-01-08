@@ -50,6 +50,8 @@ ReloadBrivGemFarmSettings()
         g_BrivUserSettings[ "RestoreLastWindowOnGameOpen" ] := false
     if ( g_BrivUserSettings[ "PreferredBrivJumpZones" ] == "")
 	    g_BrivUserSettings[ "PreferredBrivJumpZones" ] := [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] 
+    if ( g_BrivUserSettings[ "AvoidBossBuffer" ] == "" )
+        g_BrivUserSettings[ "AvoidBossBuffer" ] := 0  ; Set to 1 if you want `e` formation on j==1 as well
     if(g_BrivUserSettings["WriteSettings"] := true)
     {
         g_BrivUserSettings.Delete("WriteSettings")

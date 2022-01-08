@@ -589,6 +589,9 @@ class IC_SharedFunctions_Class
         ;bench briv not in a preferred briv jump zone
         if (settings["PreferredBrivJumpZones"][Mod( this.Memory.ReadCurrentZone(), 50) == 0 ? 50 : Mod( this.Memory.ReadCurrentZone(), 50) ] == 0)
             return true
+        ;bench briv if avoid bosses setting is on and on a boss zone -- old code from AvoidBosses
+        ;elif (settings[ "AvoidBosses" ] AND (Mod( this.Memory.ReadCurrentZone(), 5 ) <= settings[ "AvoidBossBuffer" ]))
+        ;    return true
         ;perform no other checks if 'Briv Jump Buffer' setting is disabled
         if !(settings[ "BrivJumpBuffer" ])
             return false
