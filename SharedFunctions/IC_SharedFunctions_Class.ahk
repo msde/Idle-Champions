@@ -578,7 +578,7 @@ class IC_SharedFunctions_Class
         if (this.Memory.ReadTransitionOverrideSize() == 1 AND this.Memory.ReadTransitionDirection() != 2 AND this.Memory.ReadFormationTransitionDir() == 3 )
             return true
         ;bench briv if avoid bosses setting is on and on a boss zone
-        if (settings[ "AvoidBosses" ] AND !Mod( this.Memory.ReadCurrentZone(), 5 ))
+        if (settings[ "AvoidBosses" ] AND (Mod( this.Memory.ReadCurrentZone(), 5 ) <= settings[ "AvoidBossBuffer" ]))
             return true
         ;perform no other checks if 'Briv Jump Buffer' setting is disabled
         if !(settings[ "BrivJumpBuffer" ])
