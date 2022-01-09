@@ -102,7 +102,7 @@ class Jimothy
             g_SF.FallBackFromZone()
         }
         if (this.UseMsgBox)
-            MsgBox, % this.EndRunTxt . " Jimothy run over."
+            MsgBox, % this.EndRunTxt . " Jimothy run over. " . A_Now
         return
     }
 
@@ -198,14 +198,14 @@ class Jimothy
         this.Zone := g_SF.Memory.ReadCurrentZone()
         if (this.Zone > this.MaxZone)
         {
-            this.EndRunTxt := "Reached target zone."
+            this.EndRunTxt := "Reached target zone." . A_Now
             return true
         }
         
         this.Haste := g_SF.Memory.ReadHasteStacks()
         if (this.Haste < 50)
         {
-            this.EndRunTxt := "Ran out of Haste Stacks."
+            this.EndRunTxt := "Ran out of Haste Stacks." . A_Now
             return true
         }
         
