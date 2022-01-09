@@ -538,9 +538,17 @@ class IC_BrivGemFarm_Class
     ;Gets total of SteelBonesStacks + Haste Stacks
     GetNumStacksFarmed()
     {
-        if ( g_BrivUserSettings[ "RestartStackTime" ] )
+        ; original:
+        ; if ( g_BrivUserSettings[ "RestartStackTime" ] )
+        ; to accomodate early stacking:
+        ; return steelbones + 47 if we are past stack zone like online stacking and have stacks
+        ; There is a point during modron reset where we have reset current zone, but not converted stacks
+        currentZone := g_SF.Memory.ReadCurrentZone()
+        sbStacks := g_SF.Memory.ReadSBStacks()
+        ; if ( g_BrivUserSettings[ "RestartStackTime" ] AND (g_SF.Memory.ReadCurrentZone() < g_BrivUserSettings[ "StackZone" ]) AND (g_SF.Memory.ReadCurrentZone() > 0) )
+        if ( g_BrivUserSettings[ "RestartStackTime" ] AND ((currentZone < g_BrivUserSettings[ "StackZone" ]) OR currentZone >= g_SF.ModronResetZone))
         {
-            return g_SF.Memory.ReadHasteStacks() + g_SF.Memory.ReadSBStacks()
+            return sbStacks + g_SF.Memory.ReadHasteStacks()
         }
         else
         {
@@ -550,7 +558,7 @@ class IC_BrivGemFarm_Class
             ; would happen after every jump.
             ; Thus, we use a static 47 instead of using the actual haste stacks
             ; with the assumption that we'll be at minimum stacks after a reset.
-            return g_SF.Memory.ReadSBStacks() + 47
+            return sbStacks + 47
         }
     }
 
