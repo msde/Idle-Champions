@@ -589,9 +589,16 @@ class IC_SharedFunctions_Class
         ;bench briv not in a preferred briv jump zone
         if (settings["PreferredBrivJumpZones"][Mod( this.Memory.ReadCurrentZone(), 50) == 0 ? 50 : Mod( this.Memory.ReadCurrentZone(), 50) ] == 0)
             return true
-        ;bench briv if avoid bosses setting is on and on a boss zone -- old code from AvoidBosses
-        ;elif (settings[ "AvoidBosses" ] AND (Mod( this.Memory.ReadCurrentZone(), 5 ) <= settings[ "AvoidBossBuffer" ]))
+        currentZone := this.Memory.ReadCurrentZone()
+        ;bench briv if avoid bosses setting is on and on a boss zone
+        ;if (settings[ "AvoidBosses" ] AND (Mod( currentZone, 5 ) <= settings[ "AvoidBossBuffer" ]))
         ;    return true
+
+        ; bench briv to realign after stacking
+        if ( currentZone > g_BrivUserSettings[ "StackZone" ] AND g_BrivUserSettings["PreferredZoneMod5"] != -1 AND (Mod( currentZone, 5 ) != g_BrivUserSettings["PreferredZoneMod5"]) )
+        {
+            return true
+        }
         ;perform no other checks if 'Briv Jump Buffer' setting is disabled
         if !(settings[ "BrivJumpBuffer" ])
             return false
