@@ -406,7 +406,7 @@ class IC_SharedFunctions_Class
         ElapsedTime := 0
         dash := new TimeScaleWhenNotAttackedHandler ; create a new Dash Handler object.
         dash.Initialize()
-        timeScale := this.Memory.ReadTimeScaleMultiplier()
+        timeScale := this.ReadTimeScaleMultiplier()
         timeScale := timeScale < 1 ? 1 : timeScale ; time scale should never be less than 1
         timeout := 60000 ; 60s seconds ( previously / timescale (6s at 10x) )
         estimate := (60000 / timeScale) ; no buffer: 60s / timescale to show in LoopString
@@ -424,6 +424,38 @@ class IC_SharedFunctions_Class
         }
         g_PreviousZoneStartTime := A_TickCount
         return
+    }
+
+    ; Fixes incorrect time scale multipliers
+    ; use a lookup table to correct any multipliers that have had their potion blessing double counted
+    ReadTimeScaleMultiplier()
+    {
+        ; The wrong speed gets reported in zone 1.
+        ; Essentially, the blessing will be counted twice per speed potion.
+        ; then capped speed is rounded to 6 digits after the decimal.
+        ; Let's hardcode the following values and deal with them:
+        ; core + blessing + small == 1.5 * 1.25*1.25*1.25 == 2.929688 capped
+        ; Should actually be 1.5 * 1.25*1.25 == 2.34375 capped
+        ; core + blessing + medium == 1.5 * 1.75*1.25*1.25 == 4.101563 capped
+        ; Should actually be 1.5 * 1.75*1.25 == 3.28125 capped
+        ; core + blessing + small + medium == 1.5 * 1.25*1.25*1.25 * 1.75*1.25*1.25 == 8.010864 capped
+        ; Should actually be 1.5 * 1.25*1.25 * 1.75*1.25 == 5.126953 capped
+        ; core + blessing + small + large == 1.5 * 1.25*1.25*1.25 * 2.25*1.25*1.25 == 10 capped
+        ; Should actually be 1.5 * 1.25*1.25 * 2.25*1.25 == 6.591797 capped
+        ; unfortunately, we can't distinguish this from a true 10x and have to skip it.
+        ; s + m + l shouldn't be affected, it's 10 speed already so don't dashwait.
+
+        ; Temporal Rift in the Goblin Halls
+        ; core + blessing + medium + temporal rift  == 1.5 * 1.75*1.25*1.25 * 2 == 8.203125 capped 8.19 uncapped
+        ; Should actually be 1.5 * 1.75*1.25 * 2 == 6.5625 capped 6.57 uncapped
+        static badMultipliers = { 2.929688: 2.34375, 4.101563: 3.28125, 8.010864: 5.126953, 8.203125: 6.5625}
+
+        multiplier := this.Memory.ReadTimeScaleMultiplier()
+        if (badMultipliers.HasKey(multiplier))
+        {
+            multiplier := badMultipliers[multiplier]
+        }
+        return multiplier
     }
 
     ; Returns count for how many TimeScale values equal the value passed to the function
