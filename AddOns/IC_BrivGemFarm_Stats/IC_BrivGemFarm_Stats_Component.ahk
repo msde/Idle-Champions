@@ -4,11 +4,11 @@ global g_DownAlign
 GUIFunctions.AddTab("Stats")
 Gui, ICScriptHub:Tab, Stats
 Gui, ICScriptHub:Font, w700
-Gui, ICScriptHub:Add, GroupBox, x+0 y+15 w450 h130 vCurrentRunGroupID, Current `Run:
+Gui, ICScriptHub:Add, GroupBox, x+0 y+0 w450 h105 vCurrentRunGroupID, Current `Run:
 Gui, ICScriptHub:Font, w400
 
 Gui, ICScriptHub:Font, w700
-Gui, ICScriptHub:Add, Text, vLoopAlignID xp+15 yp+25 , `Loop:
+Gui, ICScriptHub:Add, Text, vLoopAlignID xp yp+15 , `Loop:
 GuiControlGet, pos, ICScriptHub:Pos, LoopAlignID
 g_LeftAlign := posX
 Gui, ICScriptHub:Add, Text, vLoopID x+2 w400, Not Started
@@ -28,9 +28,9 @@ Gui, ICScriptHub:Add, Text, vg_StackCountHID x+2 w100, % g_StackCountH
 GuiControlGet, pos, ICScriptHub:Pos, CurrentRunGroupID
 g_DownAlign := posY + posH -5
 Gui, ICScriptHub:Font, w700
-Gui, ICScriptHub:Add, GroupBox, x6 y%g_DownAlign% w450 h350 vOnceRunGroupID, Updated Once Per Full Run:
+Gui, ICScriptHub:Add, GroupBox, x6 y%g_DownAlign% w450 h435 vOnceRunGroupID, Updated Once Per Full Run:
 Gui, ICScriptHub:Font, w400
-Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+25, Previous Run Time (min):
+Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+15, Previous Run Time (min):
 Gui, ICScriptHub:Add, Text, vPrevRunTimeID x+2 w50,
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Fastest Run Time (min):
 Gui, ICScriptHub:Add, Text, vFastRunTimeID x+2 w50,
