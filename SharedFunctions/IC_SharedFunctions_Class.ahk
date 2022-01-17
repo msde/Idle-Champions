@@ -410,12 +410,13 @@ class IC_SharedFunctions_Class
         ;   does full timeout duration
         ;   past highest accepted dashwait triggering area
         ;   dash is active, dash.GetScaleActive() toggles to true when dash is active and returns "" if fails to read.
-        while ( ElapsedTime < timeout AND this.Memory.ReadCurrentZone() < DashWaitMaxZone AND !this.IsDashActive() )
+        while ( ElapsedTime < timeout AND this.Memory.ReadCurrentZone() < DashWaitMaxZone AND !(this.IsDashActive()) )
         {
             this.ToggleAutoProgress(0)
             this.SetFormation()
             ElapsedTime := A_TickCount - StartTime
             g_SharedData.LoopString := "Dash Wait: " . ElapsedTime . " / " . estimate
+            Sleep, 20
         }
         g_PreviousZoneStartTime := A_TickCount
         return
@@ -452,7 +453,7 @@ class IC_SharedFunctions_Class
     ; Does once per zone tasks like pressing leveling keys
     InitZone( spam )
     {
-        Critical, On
+        ;Critical, On
         ;this.DirectedInput(hold := 0,, "{RCtrl}") ;extra release for safety
         if(g_UserSettings[ "NoCtrlKeypress" ])
         {
@@ -473,7 +474,7 @@ class IC_SharedFunctions_Class
         this.ToggleAutoProgress(1)
         this.ModronResetZone := this.Memory.GetCoreTargetAreaByInstance(this.Memory.ReadActiveGameInstance()) ; once per zone in case user changes it mid run.
         g_PreviousZoneStartTime := A_TickCount
-        Critical, Off
+        ;Critical, Off
     }
 
     ;A test if stuck on current area. After 35s, toggles autoprogress every 5s. After 45s, attempts falling back up to 2 times. After 65s, restarts level.
@@ -644,7 +645,10 @@ class IC_SharedFunctions_Class
             ElapsedTime := A_TickCount - StartTime
         }
         while ( WinExist( "ahk_exe IdleDragons.exe" ) ) ; Kill after 10 seconds.
+        {
             WinKill
+            Sleep, 250
+        }
         return
     }
 
@@ -673,12 +677,16 @@ class IC_SharedFunctions_Class
                     ElapsedTime := A_TickCount - StartTime
                     Process, Exist, IdleDragons.exe
                     this.PID := ErrorLevel
+                    Sleep, 250
                 }
             }
             ; Process exists, wait for the window:
             while(!(this.Hwnd := WinExist( "ahk_exe IdleDragons.exe" )) AND ElapsedTime < 32000)
+            {
                 ElapsedTime := A_TickCount - StartTime
-            this.ActivateLastWindow()
+                this.ActivateLastWindow()
+                Sleep, 250
+            }
             Process, Priority, % this.PID, High
             this.Memory.OpenProcessReader()
             loadingZone := this.WaitForGameReady()
@@ -740,9 +748,15 @@ class IC_SharedFunctions_Class
         ; Starts as 1, turns to 0, back to 1 when active again.
         StartTime := ElapsedTime := A_TickCount
         while(this.Memory.ReadAreaActive() AND ElapsedTime < 1700)
+        {
             ElapsedTime := A_TickCount - StartTime
+            Sleep, 20
+        }
         while(!this.Memory.ReadAreaActive() AND ElapsedTime < 3000)
+        {
             ElapsedTime := A_TickCount - StartTime
+            Sleep, 20
+        }
         ; Briv stacks are finished updating shortly after ReadOfflineDone() completes. Give it a second.
         ; Sleep, 1200
     }
@@ -835,6 +849,8 @@ class IC_SharedFunctions_Class
             {
                 this.DirectedInput(,, spam* )
                 counter++
+            } else {
+                Sleep, 20
             }
         }
         g_SharedData.LoopString := "Waiting for formation swap..."
@@ -848,6 +864,8 @@ class IC_SharedFunctions_Class
             {
                 this.DirectedInput(,, spam* )
                 counter++
+            } else {
+                Sleep, 20
             }
         }
         isCurrentFormation := this.IsCurrentFormation( formationFavorite )
