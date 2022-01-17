@@ -9,6 +9,7 @@ class IC_BrivPotatoSharedFunctions_Class
         g_SharedData.LoopString := "Waiting for game started.."
         while( ElapsedTime < timeout AND !this.Memory.ReadGameStarted())
         {
+            Sleep, 100
             ElapsedTime := A_TickCount - timeoutTimerStart
         }
         ; check if game has offline progress to calculate
