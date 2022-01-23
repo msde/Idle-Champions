@@ -331,7 +331,8 @@ class IC_BrivGemFarm_Class
         GuiControl, ICScriptHub:, g_StackCountHID, % hasteStackMessage
 
         dtCurrentRunTime := Round( ( A_TickCount - previousLoopStartTime ) / 60000, 2 )
-        GuiControl, ICScriptHub:, dtCurrentRunTimeID, % dtCurrentRunTime
+        runMsg := dtCurrentRunTime . " " . currentZone . "/" . lastZone
+        GuiControl, ICScriptHub:, dtCurrentRunTimeID, % runMsg
 
         dtCurrentLevelTime := Round( ( A_TickCount - previousZoneStartTime ) / 1000, 2 )
         GuiControl, ICScriptHub:, dtCurrentLevelTimeID, % dtCurrentLevelTime

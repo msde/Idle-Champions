@@ -14,9 +14,9 @@ g_LeftAlign := posX
 Gui, ICScriptHub:Add, Text, vLoopID x+2 w400, Not Started
 Gui, ICScriptHub:Font, w400
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Current Area Time (s):
-Gui, ICScriptHub:Add, Text, vdtCurrentLevelTimeID x+2 w200, % dtCurrentLevelTime
+Gui, ICScriptHub:Add, Text, vdtCurrentLevelTimeID x+2 w250, % dtCurrentLevelTime
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Current `Run Time (min):
-Gui, ICScriptHub:Add, Text, vdtCurrentRunTimeID x+2 w50, % dtCurrentRunTime
+Gui, ICScriptHub:Add, Text, vdtCurrentRunTimeID x+2 w250, % dtCurrentRunTime
 
 Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+10, SB Stack `Count:
 Gui, ICScriptHub:Add, Text, vg_StackCountSBID x+2 w100, % g_StackCountSB
