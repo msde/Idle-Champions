@@ -633,15 +633,15 @@ class IC_SharedFunctions_Class
             string := ": " . string
         g_SharedData.LoopString := "Closing IC" . string
         if WinExist( "ahk_exe IdleDragons.exe" )
-            SendMessage, 0x112, 0xF060,,, ahk_exe IdleDragons.exe,,,, 10000 ; WinClose
+            SendMessage, 0x112, 0xF060,,, ahk_exe IdleDragons.exe,,,, 30000 ; WinClose
         StartTime := A_TickCount
         ElapsedTime := 0
-        while ( WinExist( "ahk_exe IdleDragons.exe" ) AND ElapsedTime < 11000 )
+        while ( WinExist( "ahk_exe IdleDragons.exe" ) AND ElapsedTime < 30000 )
         {
             Sleep, 200
             ElapsedTime := A_TickCount - StartTime
         }
-        while ( WinExist( "ahk_exe IdleDragons.exe" ) ) ; Kill after 10 seconds.
+        while ( WinExist( "ahk_exe IdleDragons.exe" ) ) ; Kill after 30 seconds.
         {
             WinKill
             Sleep, 250
