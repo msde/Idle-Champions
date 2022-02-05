@@ -604,7 +604,7 @@ class IC_BrivGemFarm_Class
             this.StackNormal()
         currentFormation := g_SF.Memory.GetCurrentFormation()
         isShandieInFormation := g_SF.IsChampInFormation( 47, currentFormation )
-        if ( !g_BrivUserSettings[ "DisableDashWait" ] AND isShandieInFormation ) ;AND g_SF.Memory.ReadHighestZone() + 50 < g_BrivUserSettings[ "StackZone"] )
+        if ( !g_BrivUserSettings[ "DisableDashWaitStack" ] AND !g_BrivUserSettings[ "DisableDashWait" ] AND isShandieInFormation ) ;AND g_SF.Memory.ReadHighestZone() + 50 < g_BrivUserSettings[ "StackZone"] )
             g_SF.DoDashWait( Max(g_SF.ModronResetZone - g_BrivUserSettings[ "DashWaitBuffer" ], 0) )
     }
 
@@ -756,7 +756,7 @@ class IC_BrivGemFarm_Class
             g_SF.DirectedInput(,release :=0, keyspam*) ;keysdown
         }
         g_SF.ModronResetZone := g_SF.Memory.GetCoreTargetAreaByInstance(g_SF.Memory.ReadActiveGameInstance()) ; once per zone in case user changes it mid run.
-        if ( !g_BrivUserSettings[ "DisableDashWait" ] AND isShandieInFormation ) ;AND g_SF.Memory.ReadHighestZone() + 50 < g_BrivUserSettings[ "StackZone"] )
+        if ( !g_BrivUserSettings[ "DisableDashWaitSetup" ] AND !g_BrivUserSettings[ "DisableDashWait" ] AND isShandieInFormation ) ;AND g_SF.Memory.ReadHighestZone() + 50 < g_BrivUserSettings[ "StackZone"] )
             g_SF.DoDashWait( Max(g_SF.ModronResetZone - g_BrivUserSettings[ "DashWaitBuffer" ], 0) )
         g_SF.ToggleAutoProgress( 1, false, true )
     }
