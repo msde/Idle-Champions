@@ -375,6 +375,11 @@ class IC_BrivGemFarm_Class
         ;testReadAreaActive := g_SF.Memory.ReadAreaActive()
         StackFail := Max(StackFail, this.SharedRunData.StackFail)
         TriggerStart := IsObject(this.SharedRunData) ? this.SharedRunData.TriggerStart : LastTriggerStart
+        ;there's a couple of ways to trigger a run, don't reset if we just reset
+        if ( A_TickCount - RunStartTime < 10000 )
+        {
+            return
+        }
         if ( g_SF.Memory.ReadResetsCount() > LastResetCount OR (g_SF.Memory.ReadResetsCount() == 0 AND g_SF.Memory.ReadOfflineDone() AND LastResetCount != 0 ) OR (TriggerStart AND LastTriggerStart != TriggerStart) )
         {
             while(!g_SF.Memory.ReadOfflineDone() AND IsObject(this.SharedRunData) AND this.SharedRunData.TriggerStart)
