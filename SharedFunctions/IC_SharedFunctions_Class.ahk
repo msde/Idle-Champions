@@ -638,6 +638,7 @@ class IC_SharedFunctions_Class
     ; True/False on whether Briv should be unbenched based on game conditions.
     UnBenchBrivConditions(settings)
     {
+        return !this.BenchBrivConditions(settings)
         ;keep Briv benched if 'Avoid Bosses' setting is enabled and on a boss zone
         if (settings[ "AvoidBosses" ] AND !Mod( this.Memory.ReadCurrentZone(), 5 ))
             return false
