@@ -595,7 +595,7 @@ class IC_SharedFunctions_Class
         ;    return true
 
         ; bench briv to realign after stacking
-        if ( currentZone > g_BrivUserSettings[ "StackZone" ] AND g_BrivUserSettings["PreferredZoneMod5"] != -1 AND (Mod( currentZone, 5 ) != g_BrivUserSettings["PreferredZoneMod5"]) )
+        if ( (currentZone > g_BrivUserSettings[ "StackZone" ] -5) AND g_BrivUserSettings["PreferredZoneMod5"] != -1 AND (Mod( currentZone, 5 ) != g_BrivUserSettings["PreferredZoneMod5"]) )
         {
             return true
         }
