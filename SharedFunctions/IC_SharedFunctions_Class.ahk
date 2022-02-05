@@ -677,7 +677,7 @@ class IC_SharedFunctions_Class
             SendMessage, 0x112, 0xF060,,, ahk_exe IdleDragons.exe,,,, 10000 ; WinClose
         StartTime := A_TickCount
         ElapsedTime := 0
-        while ( WinExist( "ahk_exe IdleDragons.exe" ) AND ElapsedTime < 10000 )
+        while ( WinExist( "ahk_exe IdleDragons.exe" ) AND ElapsedTime < 11000 )
         {
             ElapsedTime := A_TickCount - StartTime
             Sleep, 250
