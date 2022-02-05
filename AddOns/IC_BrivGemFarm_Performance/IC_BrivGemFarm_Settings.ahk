@@ -55,6 +55,10 @@ ReloadBrivGemFarmSettings()
         g_BrivUserSettings[ "AvoidBossBuffer" ] := 0  ; Set to 1 if you want `e` formation on j==1 as well
     if ( g_BrivUserSettings[ "PreferredZoneMod5" ] == "" )
         g_BrivUserSettings[ "PreferredZoneMod5" ] := -1  ; Preferred mod5 value post-stack.  Set to -1 to disable
+    if ( g_BrivUserSettings[ "DisableDashWaitSetup" ] == "" )
+        g_BrivUserSettings[ "DisableDashWaitSetup" ] := false ; disable dashwait on first zone/load
+    if ( g_BrivUserSettings[ "DisableDashWaitStack" ] == "" )
+        g_BrivUserSettings[ "DisableDashWaitStack" ] := false ; disable dashwait after restack
 
     if(g_BrivUserSettings["WriteSettings"] := true)
     {
