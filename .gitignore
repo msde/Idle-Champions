@@ -1,6 +1,6 @@
 *settings.json
 IC_Test*
-IC_*Extra*
+#IC_*Extra*
 .gitignore
 Logging*LOG*
 .vscode*
