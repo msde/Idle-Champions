@@ -788,10 +788,12 @@ class IC_SharedFunctions_Class
         while(this.Memory.ReadAreaActive() AND ElapsedTime < 1700)
         {
             ElapsedTime := A_TickCount - StartTime
+            Sleep, 20
         }
         while(!this.Memory.ReadAreaActive() AND ElapsedTime < 3000)
         {
             ElapsedTime := A_TickCount - StartTime
+            Sleep, 20
         }
         ; Briv stacks are finished updating shortly after ReadOfflineDone() completes. Give it a second.
         ; Sleep, 1200
