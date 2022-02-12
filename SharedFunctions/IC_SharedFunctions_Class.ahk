@@ -639,7 +639,17 @@ class IC_SharedFunctions_Class
     {
         ; do not unbench briv if party is not on a perferred briv jump zone.
         if (settings["PreferredBrivJumpZones"][Mod( this.Memory.ReadCurrentZone(), 50) == 0 ? 50 :  Mod(this.Memory.ReadCurrentZone(), 50)] == 0)
+
+        currentZone := this.Memory.ReadCurrentZone()
+        ;keep Briv benched if 'Avoid Bosses' setting is enabled and on a boss zone -- old AvoidBoss code
+        ;if (settings[ "AvoidBosses" ] AND (Mod( currentZone, 5 ) <= settings[ "AvoidBossBuffer" ]))
+        ;    return false
+
+        ; keep briv benched to realign after stacking
+        if ( (currentZone > g_BrivUserSettings[ "StackZone" ] -5) AND g_BrivUserSettings["PreferredZoneMod5"] != -1 AND (Mod( currentZone, 5 ) != g_BrivUserSettings["PreferredZoneMod5"]) )
+        {
             return false
+        }
         ;unbench briv if 'Briv Jump Buffer' setting is disabled and transition direction is "OnFromLeft"
         if (!(settings[ "BrivJumpBuffer" ]) AND this.Memory.ReadFormationTransitionDir() == 0)
             return true
