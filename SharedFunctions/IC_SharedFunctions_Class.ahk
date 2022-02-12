@@ -645,10 +645,15 @@ class IC_SharedFunctions_Class
     ; True/False on whether Briv should be unbenched based on game conditions.
     UnBenchBrivConditions(settings)
     {
-        return !this.BenchBrivConditions(settings)
+        currentZone := this.Memory.ReadCurrentZone()
         ;keep Briv benched if 'Avoid Bosses' setting is enabled and on a boss zone
-        if (settings[ "AvoidBosses" ] AND !Mod( this.Memory.ReadCurrentZone(), 5 ))
+        if (settings[ "AvoidBosses" ] AND (Mod( currentZone, 5 ) <= settings[ "AvoidBossBuffer" ]))
             return false
+        ; keep briv benched to realign after stacking
+        if ( (currentZone > g_BrivUserSettings[ "StackZone" ] -5) AND g_BrivUserSettings["PreferredZoneMod5"] != -1 AND (Mod( currentZone, 5 ) != g_BrivUserSettings["PreferredZoneMod5"]) )
+        {
+            return false
+        }
         ;unbench briv if 'Briv Jump Buffer' setting is disabled and transition direction is "OnFromLeft"
         if (!(settings[ "BrivJumpBuffer" ]) AND this.Memory.ReadFormationTransitionDir() == 0)
             return true
