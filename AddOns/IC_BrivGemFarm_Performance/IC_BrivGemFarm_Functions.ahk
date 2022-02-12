@@ -154,7 +154,7 @@ class IC_BrivGemFarm_Class
         {
             g_SharedData.LoopString := "Main Loop"
             Critical, Off ; make sure this isn't stuck from something else
-            Sleep, 10
+            ; Sleep, 10
             CurrentZone := g_SF.Memory.ReadCurrentZone()
             if(CurrentZone == "" AND !g_SF.SafetyCheck()) ; Check for game closed
                 g_SF.ToggleAutoProgress( 1, false, true ) ; Turn on autoprogress after a restart
@@ -210,7 +210,7 @@ class IC_BrivGemFarm_Class
                 g_SharedData.StackFail := StackFailStates.FAILED_TO_PROGRESS ; 3
                 g_SharedData.StackFailStats.TALLY[g_SharedData.StackFail] += 1
             }
-            Sleep, 20 ; here to keep the script responsive.
+            Sleep, 10 ; here to keep the script responsive.
         }
     }
 
