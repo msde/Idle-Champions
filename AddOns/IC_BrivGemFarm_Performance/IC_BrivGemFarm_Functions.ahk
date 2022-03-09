@@ -177,7 +177,7 @@ class IC_BrivGemFarm_Class
                 g_SharedData.SwapsMadeThisRun := 0
                 g_SharedData.TriggerStart := false
                 g_SharedData.LoopString := "Main Loop"
-                this.WelcomeBackClick()
+                ; this.WelcomeBackClick()
             }
             if (g_SharedData.StackFail != 2)
                 g_SharedData.StackFail := Max(this.TestForSteelBonesStackFarming(), g_SharedData.StackFail)
