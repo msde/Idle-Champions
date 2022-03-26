@@ -35,7 +35,7 @@ class IC_MemoryFunctions_Class
     ;Updates installed after the date of this script may result in the pointer addresses no longer being accurate.
     GetVersion()
     {
-        return "v1.10.1, 2022-03-15, IC v0.415.1+"
+        return "v1.9.3, 2022-02-01, IC v0.415.1+"
     }
 
     ;Open a process with sufficient access to read and write memory addresses (this is required before you can use the other functions)
@@ -115,11 +115,6 @@ class IC_MemoryFunctions_Class
     ReadMonstersSpawned()
     {
         return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.Area.BasicMonstersSpawned)
-    }
-
-    ReadActiveMonstersCount()
-    {
-        return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.Area.activeMonstersListSize)
     }
 
     ReadResetting()
@@ -254,7 +249,7 @@ class IC_MemoryFunctions_Class
 
     ReadChampSeatByID(ChampID := 0)
     {
-        return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.HeroHandler.HeroList.def.Seat.GetGameObjectFromListValues(ChampID - 1))
+        return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.HeroHandler.HeroList.Seat.GetGameObjectFromListValues(ChampID - 1))
     }
 
     ReadChampNameByID(ChampID := 0)
@@ -710,11 +705,12 @@ class IC_MemoryFunctions_Class
         size := this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsListSize)
         if(!size)
             return ""
-        index := this.BinarySearchList(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.ID, 1, size, buffID)
-        if (index >= 0)
-            return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.InventoryAmount.GetGameObjectFromListValues(index - 1))
-        else
-            return ""
+        loop, %size%
+        {
+            if(this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.ID.GetGameObjectFromListValues(A_index - 1)) == buffID)
+                return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.InventoryAmount.GetGameObjectFromListValues(A_index - 1))
+        }
+        return ""
     }
 
     GetInventoryBuffNameByID(buffID)
@@ -722,11 +718,13 @@ class IC_MemoryFunctions_Class
         size := this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsListSize)
         if(!size)
             return ""
-        index := this.BinarySearchList(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.ID, 1, size, buffID)
-        if (index >= 0)
-            return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.NameSingular.GetGameObjectFromListValues(index - 1))
-        else
-            return ""
+        loop, %size%
+        {
+            testValue := this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.ID.GetGameObjectFromListValues(A_index - 1) )
+            if(testValue == buffID)
+                return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.BuffHandler.InventoryBuffsList.NameSingular.GetGameObjectFromListValues(A_index - 1))
+        }
+        return ""
     }
 
     ReadInventoryItemsCount()
@@ -743,13 +741,19 @@ class IC_MemoryFunctions_Class
             return "" 
         loop, %size%
         {
-            ; Not using 64 bit list, but need +0x10 offset for where list starts
-            testIndex := this.Is64Bit ? (A_index - 1) * 4 + 4 : testIndex := (A_Index - 1) * 4
+            if(this.Is64Bit)
+                testIndex := (A_index - 1) * 4 + 4 ; Not using 64 bit list, but need +0x10 offset for where list starts
+            else
+                testIndex := (A_Index - 1) * 4
             testValue := this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.ChestHandler.ChestCountsDictionary.GetGameObjectFromListValues(testIndex))
-            ; Addresses are 64 bit but the dictionary entry offsets are 4 bytes instead of 8.
-            testIndex := this.Is64Bit ? (A_index - 1) * 4 + 7 : (A_index - 1) * 4 + 3
+            if(this.Is64Bit)
+                testIndex := (A_index - 1) * 4 + 7 ; Addresses are 64 bit but the dictionary entry offsets are 4 bytes instead of 8.
+            else
+                testIndex := (A_index - 1) * 4 + 3
             if(testValue == chestID)
+            {
                 return this.GenericGetValue(this.GameManager.Game.GameInstance.Controller.UserData.ChestHandler.ChestCountsDictionary.GetGameObjectFromListValues(testIndex))
+            }
         }
         return "" 
     }
@@ -759,11 +763,13 @@ class IC_MemoryFunctions_Class
         size := this.GenericGetValue(this.CrusadersGameDataSet.CrusadersGameDataSet.ChestDefinesListSize)    
         if(!size)
             return "" 
-        index := this.BinarySearchList(this.CrusadersGameDataSet.CrusadersGameDataSet.ChestDefinesList.ID, 1, size, chestID)
-        if (index >= 0)
-            return this.GenericGetValue(this.CrusadersGameDataSet.CrusadersGameDataSet.ChestDefinesList.NamePlural.GetGameObjectFromListValues(index - 1))
-        else
-            return ""
+        loop, %size%
+        {
+            testValue := this.GenericGetValue(this.CrusadersGameDataSet.CrusadersGameDataSet.ChestDefinesList.ID.GetGameObjectFromListValues(A_Index - 1))
+            if(testValue == chestID)
+                return this.GenericGetValue(this.CrusadersGameDataSet.CrusadersGameDataSet.ChestDefinesList.NamePlural.GetGameObjectFromListValues(A_Index - 1))
+        }
+        return "" 
     }
 
     ;===================
@@ -869,32 +875,6 @@ class IC_MemoryFunctions_Class
         if(exponent < 4)
             return Round((FirstEight + (2.0**63)) * (2.0**SecondEight), 0) . ""
         return significand . "e" . exponent
-    }
-
-    BinarySearchList(gameObject, leftIndex, rightIndex, searchValue)
-    {
-        
-        if(rightIndex < leftIndex)
-        {
-            return -1
-        }
-        else
-        {
-            middle := Ceil(leftIndex + ((rightIndex-leftIndex) / 2))
-            IDValue := this.GenericGetValue(gameObject.GetGameObjectFromListValues(middle - 1))
-            ; failed memory read
-            if(IDValue == "")
-                return -1
-            ; if value found, return index
-            else if (IDValue == searchValue)
-                return middle
-            ; else if value larger that middle value, check larger half
-            else if (IDValue > searchValue)
-                return this.BinarySearchList(gameObject, leftIndex, middle-1, searchValue)
-            ; else if value smaller than middle value, check smaller half
-            else
-                return this.BinarySearchList(gameObject, middle+1, rightIndex, searchValue)
-        }
     }
 
     #include *i IC_MemoryFunctions_Extended.ahk
