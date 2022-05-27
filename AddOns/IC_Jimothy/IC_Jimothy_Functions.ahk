@@ -102,7 +102,7 @@ class Jimothy
             g_SF.FallBackFromZone()
         }
         if (this.UseMsgBox)
-            MsgBox, % this.EndRunTxt . " Jimothy run over. " . A_Now
+            MsgBox, % this.EndRunTxt . " Jimothy run over."
         return
     }
 
@@ -198,14 +198,14 @@ class Jimothy
         this.Zone := g_SF.Memory.ReadCurrentZone()
         if (this.Zone > this.MaxZone)
         {
-            this.EndRunTxt := "Reached target zone." . A_Now
+            this.EndRunTxt := "Reached target zone."
             return true
         }
         
         this.Haste := g_SF.Memory.ReadHasteStacks()
         if (this.Haste < 50)
         {
-            this.EndRunTxt := "Ran out of Haste Stacks." . A_Now
+            this.EndRunTxt := "Ran out of Haste Stacks."
             return true
         }
         
@@ -310,5 +310,3 @@ class IC_JimothySharedFunctions_Class extends IC_SharedFunctions_Class
         }  
     }
 }
-
-#include %A_LineFile%\..\..\..\SharedFunctions\MemoryRead\EffectKeyHandlers\HavilarImpHandler.ahk
