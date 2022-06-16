@@ -7,6 +7,8 @@ class IC_BrivGemFarm_AdvancedSettings_Component
         g_BrivUserSettings[ "DoChestsContinuous" ] := OptionSettingCheck_DoChestsContinuous
         g_BrivUserSettings[ "HiddenFarmWindow" ] := OptionSettingCheck_HiddenFarmWindow
         g_BrivUserSettings[ "RestoreLastWindowOnGameOpen" ] := OptionSettingCheck_RestoreLastWindowOnGameOpen
+        g_BrivUserSettings[ "DisableDashWaitSetup" ] := OptionSettingCheck_DisableDashWaitSetup
+        g_BrivUserSettings[ "DisableDashWaitStack" ] := OptionSettingCheck_DisableDashWaitStack
         g_BrivUserSettings[ "BrivJumpBuffer" ] := OptionSettingEdit_BrivJumpBuffer
         g_BrivUserSettings[ "DashWaitBuffer" ] := OptionSettingEdit_DashWaitBuffer
         g_BrivUserSettings[ "ResetZoneBuffer" ] := OptionSettingEdit_ResetZoneBuffer
@@ -37,5 +39,7 @@ class IC_BrivGemFarm_AdvancedSettings_Component
         GuiControl,ICScriptHub:, OptionSettingCheck_DoChestsContinuous, % g_BrivUserSettings[ "DoChestsContinuous" ]
         GuiControl,ICScriptHub:, OptionSettingCheck_HiddenFarmWindow, % g_BrivUserSettings[ "HiddenFarmWindow" ]
         GuiControl,ICScriptHub:, OptionSettingCheck_RestoreLastWindowOnGameOpen, % g_BrivUserSettings[ "RestoreLastWindowOnGameOpen" ]
+        GuiControl,ICScriptHub:, OptionSettingCheck_DisableDashWaitSetup, % g_BrivUserSettings[ "DisableDashWaitSetup" ]
+        GuiControl,ICScriptHub:, OptionSettingCheck_DisableDashWaitStack, % g_BrivUserSettings[ "DisableDashWaitStack" ]
     }
 }

@@ -21,10 +21,14 @@ Gui, ICScriptHub:Font, w400
 ;g_BrivUserSettings[ "RestoreLastWindowOnGameOpen" ]
 ;g_BrivUserSettings[ "WindowXPositon" ]
 ;g_BrivUserSettings[ "WindowYPositon" ]
+;g_BrivUserSettings[ "DisableDashWaitSetup" ]
+;g_BrivUserSettings[ "DisableDashWaitStack" ]
 
 Gui, ICScriptHub:Add, Checkbox, vOptionSettingCheck_DoChestsContinuous x15 y+5, DoChestsContinuous
 Gui, ICScriptHub:Add, Checkbox, vOptionSettingCheck_HiddenFarmWindow x15 y+5, HiddenFarmWindow
 Gui, ICScriptHub:Add, Checkbox, vOptionSettingCheck_RestoreLastWindowOnGameOpen x15 y+5, RestoreLastWindowOnGameOpen
+Gui, ICScriptHub:Add, Checkbox, vOptionSettingCheck_DisableDashWaitSetup x15 y+5, DisableDashWaitSetup
+Gui, ICScriptHub:Add, Checkbox, vOptionSettingCheck_DisableDashWaitStack x15 y+5, DisableDashWaitStack
 
 if(g_isDarkMode)
     Gui, ICScriptHub:Font, g_CustomColor
