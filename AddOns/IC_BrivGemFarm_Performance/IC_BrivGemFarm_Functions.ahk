@@ -243,7 +243,7 @@ class IC_BrivGemFarm_Class
             else
             { 
                 ; Briv ran out of jumps but has enough stacks for a new adventure, restart adventure
-                if ( g_SF.Memory.ReadHasteStacks() < 50 AND stacks > g_BrivUserSettings[ "TargetStacks" ] AND g_SF.Memory.ReadHighestZone() > 10)
+                if ( g_SF.Memory.ReadHasteStacks() < 50 AND stacks > g_BrivUserSettings[ "TargetStacks" ] AND g_SF.Memory.ReadHighestZone() > 10 AND CurrentZone < g_SF.ModronResetZone)
                 {
                     stackFail := StackFailStates.FAILED_TO_REACH_STACK_ZONE_HARD ; 4
                     g_SharedData.StackFailStats.TALLY[stackfail] += 1
