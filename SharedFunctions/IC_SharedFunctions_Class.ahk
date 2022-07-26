@@ -973,7 +973,7 @@ class IC_SharedFunctions_Class
             {
                 this.DirectedInput(hold:=0,, var* ) ;keysup
                 this.DirectedInput(,release := 0, var* ) ; keysdown
-                if(!Mod(counter, 10))
+                if(!Mod(counter, 3))
                     this.DirectedInput(,, keys* )
                 counter ++
             }
