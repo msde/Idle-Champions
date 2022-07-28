@@ -656,15 +656,15 @@ class IC_SharedFunctions_Class
         g_SharedData.LoopString := "Closing IC" . string
         sendMessageString := "ahk_exe " . g_userSettings[ "ExeName"]
         if WinExist( "ahk_exe " . g_userSettings[ "ExeName"] )
-            SendMessage, 0x112, 0xF060,,, %sendMessageString%,,,, 10000 ; WinClose
+            SendMessage, 0x112, 0xF060,,, %sendMessageString%,,,, 30000 ; WinClose
         StartTime := A_TickCount
         ElapsedTime := 0
-        while ( WinExist( "ahk_exe " . g_userSettings[ "ExeName"] ) AND ElapsedTime < 10000 )
+        while ( WinExist( "ahk_exe " . g_userSettings[ "ExeName"] ) AND ElapsedTime < 30000 )
         {
             Sleep, 200
             ElapsedTime := A_TickCount - StartTime
         }
-        while ( WinExist( "ahk_exe " . g_userSettings[ "ExeName"] ) ) ; Kill after 10 seconds.
+        while ( WinExist( "ahk_exe " . g_userSettings[ "ExeName"] ) ) ; Kill after 30 seconds.
         {
             WinKill
             Sleep, 250
