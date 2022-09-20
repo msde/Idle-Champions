@@ -613,7 +613,9 @@ class IC_SharedFunctions_Class
     {
         ; do not unbench briv if party is not on a perferred briv jump zone.
         if (settings["PreferredBrivJumpZones"][Mod( this.Memory.ReadCurrentZone(), 50) == 0 ? 50 :  Mod(this.Memory.ReadCurrentZone(), 50)] == 0)
-
+        {
+            return false
+        }
         currentZone := this.Memory.ReadCurrentZone()
         ;keep Briv benched if 'Avoid Bosses' setting is enabled and on a boss zone -- old AvoidBoss code
         ;if (settings[ "AvoidBosses" ] AND (Mod( currentZone, 5 ) <= settings[ "AvoidBossBuffer" ]))
