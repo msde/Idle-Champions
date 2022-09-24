@@ -186,10 +186,8 @@ class IC_BrivGemFarm_Stats_Component
         GuiControlGet, pos, ICScriptHub:Pos, CurrentRunGroupID
         Gui, ICScriptHub:Font, w700
         Gui, ICScriptHub:Add, GroupBox, x%posX% y%g_DownAlign% w450 h125 vBrivGemFarmStatsID, BrivGemFarm Stats:
-        Gui, ICScriptHub:Font, w400 
-        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+15, Formation Swaps Made `This `Run:
-        Gui, ICScriptHub:Add, Text, vSwapsMadeThisRunID x+2 w200, 
-        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Boss Levels Hit `This `Run:
+        Gui, ICScriptHub:Font, w400
+        Gui, ICScriptHub:Add, Text, x%g_LeftAlign% yp+15, Boss Levels Hit `This `Run:
         Gui, ICScriptHub:Add, Text, vBossesHitThisRunID x+2 w200, 
         Gui, ICScriptHub:Add, Text, x%g_LeftAlign% y+2, Boss Levels Hit Since Start:
         Gui, ICScriptHub:Add, Text, vTotalBossesHitID x+2 w200,
