@@ -1,6 +1,7 @@
+.DS_Store
 *settings.json
 IC_Test*
-IC_*Extra*
+#IC_*Extra*
 .gitignore
 Logging*LOG*
 .vscode*
@@ -13,3 +14,6 @@ AddOns/IC_BrivGemFarm_Private/
 #AddonManagement Addon ignores
 AddOns/GeneratedAddonInclude.ahk
 AddOns/IC_Addon_Management/AddonManagement.json
+AddOns/IC_BrivGemFarm_Performance/LastGUID_*.json
+SharedFunctions/MemoryRead/CurrentPointers.json
+
