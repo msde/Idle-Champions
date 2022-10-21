@@ -3,6 +3,12 @@
 get_imports:
 	cp -r ../JonBallinger-EGSImports/Imports/* SharedFunctions/MemoryRead/Imports/
 	dos2unix SharedFunctions/MemoryRead/Imports/*
+	dos2unix SharedFunctions/MemoryRead/Imports/ActiveEffectHandlers/*
+
+dos2unix:
+	dos2unix SharedFunctions/MemoryRead/Imports/*
+	dos2unix SharedFunctions/MemoryRead/Imports/ActiveEffectHandlers/*
+
 
 get_addons_mikebaldi:
 	rm -f AddOns/IC_Azaka_Extra/*.ahk AddOns/IC_NERDs_Extra/*.ahk AddOns/IC_NoModronLvling_Extra/*.ahk
